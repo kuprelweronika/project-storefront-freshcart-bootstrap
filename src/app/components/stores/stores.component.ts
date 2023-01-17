@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-stores',
