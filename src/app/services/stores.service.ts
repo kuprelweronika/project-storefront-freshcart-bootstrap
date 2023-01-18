@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { StoresModel } from '../models/stores.model';
+import { StoreModel } from '../models/store.model';
 
 @Injectable({ providedIn: 'root' })
 export class StoresService {
   constructor(private _httpClient: HttpClient) {}
 
-  getAllStores(): Observable<StoresModel[]> {
-    return this._httpClient.get<StoresModel[]>(
+  getAllStores(): Observable<StoreModel[]> {
+    return this._httpClient.get<StoreModel[]>(
       'https://6384fca14ce192ac60696c4b.mockapi.io/freshcart-stores'
     );
   }

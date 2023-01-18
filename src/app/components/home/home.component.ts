@@ -4,8 +4,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CategoriesModel } from '../../models/categories.model';
-import { StoresModel } from '../../models/stores.model';
+import { CategoryModel } from '../../models/category.model';
+import { StoreModel } from '../../models/store.model';
 import { StoresService } from '../../services/stores.service';
 import { CategoriesService } from '../../services/categories.service';
 
@@ -17,9 +17,9 @@ import { CategoriesService } from '../../services/categories.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
-  readonly categories$: Observable<CategoriesModel[]> =
+  readonly categories$: Observable<CategoryModel[]> =
     this._categoriesService.getAllCategories();
-  readonly stores$: Observable<StoresModel[]> =
+  readonly stores$: Observable<StoreModel[]> =
     this._storesService.getAllStores();
 
   constructor(

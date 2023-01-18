@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CategoriesModel } from '../models/categories.model';
+import { CategoryModel } from '../models/category.model';
 
 @Injectable({ providedIn: 'root' })
 export class CategoriesService {
   constructor(private _httpClient: HttpClient) {}
 
-  getAllCategories(): Observable<CategoriesModel[]> {
-    return this._httpClient.get<CategoriesModel[]>(
+  getAllCategories(): Observable<CategoryModel[]> {
+    return this._httpClient.get<CategoryModel[]>(
       'https://6384fca14ce192ac60696c4b.mockapi.io/freshcart-categories'
     );
   }
