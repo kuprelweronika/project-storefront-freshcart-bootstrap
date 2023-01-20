@@ -1,1 +1,74 @@
-<h1>home</h1>
+<div class="header">
+  <nav class="navbar navbar-expand-sm navbar-light">
+    <div class="container-fluid">
+      <img
+        src="../../../assets/images/favicon/logo1.png"
+        class="navbar-brand w-5"
+      />
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-expanded="false"
+        aria-controls="navbarNav"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item" *ngFor="let category of categories$ | async">
+            <a class="nav-link" [routerLink]="'categories/' + category.name">{{
+              category.name
+            }}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<footer class="footer fixed-bottom p-10">
+  <div class="d-flex flex-md-row flex-wrap flex-column">
+    <div class="col-6 col-md">
+      <ul class="navbar-brand list-group-flush">
+        <h4>Categories</h4>
+        <li
+          class="nav-item list-group-item"
+          *ngFor="let category of categories$ | async"
+        >
+          <a class="nav-link" [routerLink]="'categories/' + category.name">
+            {{ category.name }}</a
+          >
+        </li>
+      </ul>
+    </div>
+
+    <div class="col-6 col-md">
+      <ul class="navbar-brand list-group-flush">
+        <h4>Stores</h4>
+
+        <li
+          class="nav-item list-group-item"
+          *ngFor="let store of stores$ | async"
+        >
+          <a class="nav-link" [routerLink]="'stores/' + store.name">
+            {{ store.name }}
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-6 col-md">
+      <ul class="navbar-brand list-group-flush">
+        <h4>Get to know us</h4>
+        <li class="nav-item list-group-item">Company</li>
+
+        <li class="nav-item list-group-item">Blog</li>
+        <li class="nav-item list-group-item">About</li>
+        <li class="nav-item list-group-item">Help Center</li>
+        <li class="nav-item list-group-item">Our Value</li>
+      </ul>
+    </div>
+  </div>
+</footer>
