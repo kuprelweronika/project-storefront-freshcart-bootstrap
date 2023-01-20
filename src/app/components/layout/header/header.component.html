@@ -1,0 +1,35 @@
+<ng-container *ngIf="categories$ | async as categories">
+  <div class="header border-bottom">
+    <nav class="navbar navbar-expand-md navbar-light">
+      <div class="container-fluid">
+        <img
+          src="../../../assets/images/favicon/logo1.png"
+          class="navbar-brand w-5"
+        />
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#menu"
+          aria-expanded="false"
+          aria-controls="menu"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="ofcanvas offcanvas-start">
+          <div class="collapse navbar-collapse" id="menu">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+              <li class="nav-item" *ngFor="let category of categories">
+                <a
+                  class="nav-link"
+                  [routerLink]="'categories/' + category.id"
+                  >{{ category.name }}</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div></ng-container
+>

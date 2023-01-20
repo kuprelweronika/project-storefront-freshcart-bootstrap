@@ -1,0 +1,44 @@
+<ng-container *ngIf="categories$ | async as categories">
+  <ng-container *ngIf="stores$ | async as stores">
+    <footer class="footer p-10">
+      <div class="d-flex flex-md-row flex-wrap flex-column">
+        <div class="col-6 col-md">
+          <ul class="navbar-brand list-group-flush">
+            <h4>Categories</h4>
+            <li
+              class="nav-item list-group-item"
+              *ngFor="let category of categories"
+            >
+              <a class="nav-link" [routerLink]="'categories/' + category.id">
+                {{ category.name }}</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-6 col-md">
+          <ul class="navbar-brand list-group-flush">
+            <h4>Stores</h4>
+
+            <li class="nav-item list-group-item" *ngFor="let store of stores">
+              <a class="nav-link" [routerLink]="'stores/' + store.id">
+                {{ store.name }}
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-6 col-md">
+          <ul class="navbar-brand list-group-flush">
+            <h4>Get to know us</h4>
+            <li class="nav-item list-group-item">Company</li>
+
+            <li class="nav-item list-group-item">Blog</li>
+            <li class="nav-item list-group-item">About</li>
+            <li class="nav-item list-group-item">Help Center</li>
+            <li class="nav-item list-group-item">Our Value</li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+  </ng-container></ng-container
+>

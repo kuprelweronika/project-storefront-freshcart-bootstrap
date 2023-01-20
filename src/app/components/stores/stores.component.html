@@ -1,1 +1,79 @@
-<h1>store</h1>
+<ng-container *ngIf="store$ | async as store">
+  <ng-container *ngIf="productsSearch$ | async as products">
+    <div class="container-fluid px-lg-18 pt-12">
+      <div class="d-flex flex-column flex-lg-row justify-content-center">
+        <div class="container w-50">
+          <div>
+            <img src="{{ store.logoUrl }}" class="rounded-circle" />
+          </div>
+
+          <div class="pt-3 fw-bold fs-4">{{ store.name }}</div>
+          <div>It is only {{ store.distanceInMeters }} km away from you!</div>
+        </div>
+        <div
+          class="container bg-secondary bg-opacity-10 d-flex flex-row justify-content-between rounded-4 py-5"
+        >
+          <div class="d-flex flex-column justify-content-center ps-5 flex-fill">
+            <div class="fw-bold fs-4">{{ store.name }}</div>
+            <div>Whateve the occasion, we've got you covered.</div>
+            <form [formGroup]="search" (ngSubmit)="onSearchSubmitted(search)">
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="product"
+                  [placeholder]="'Search ' + store.name"
+                />
+                <button
+                  class="btn btn-outline-secondary bg-light"
+                  type="submit"
+                  id="button-addon2"
+                >
+                  <img
+                    src="../../../assets/libs/bootstrap-icons/icons/search.svg"
+                  />
+                </button>
+              </div>
+            </form>
+          </div>
+          <div>
+            <img
+              src="../../../assets/images/svg-graphics/store-graphics.svg"
+              class="d-none d-sm-inline w-sm-100"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid pt-6 px-md-12">
+      <h2>Fruits & Vegetables</h2>
+      <div
+        class="row row-cols-md-5 row-cols-1 text-center justify-content-center"
+      >
+        <div
+          class="col-md-2 d-flex flex-column p-2"
+          *ngFor="let product of products"
+        >
+          <div class="h-100">
+            <img src="{{ product.imageUrl }}" class="img-fluid" />
+            <h4 class="pt-3">{{ product.name }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <h2>Stores</h2>
+      <div class="row row-cols-4 gap-2">
+        <div class="col d-flex flex-row p-3 border" *ngFor="let store; of">
+          <img src="" class="img-fluid rounded-circle" />
+          <div class="d-flex align-self-center flex-column">
+            <h6 class="px-2"></h6>
+            <div class="badge bg-secondary align-self-center">km</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
