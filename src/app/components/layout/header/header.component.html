@@ -6,19 +6,18 @@
           src="../../../assets/images/favicon/logo1.png"
           class="navbar-brand w-5"
         />
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#menu"
-          aria-expanded="false"
-          aria-controls="menu"
-        >
+        <button class="navbar-toggler" (click)="toggleMenu()">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="ofcanvas offcanvas-start">
-          <div class="collapse navbar-collapse" id="menu">
-            <ul class="navbar-nav mb-2 mb-lg-0">
+        <div *ngIf="menuToggler$ | async as toggler">
+          <div class="offcanvas offcanvas-start">
+            <ul
+              [ngClass]="
+                toggler === true
+                  ? 'mb-2 mb-lg-0 navbar-nav offcanvas '
+                  : 'mb-2 mb-lg-0 navbar-nav offcanvas-start '
+              "
+            >
               <li class="nav-item" *ngFor="let category of categories">
                 <a
                   class="nav-link"

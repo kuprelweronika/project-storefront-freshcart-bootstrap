@@ -1,96 +1,108 @@
 <ng-container *ngIf="categories$ | async as categories">
-  <ng-container *ngIf="productsSorted$ | async as products">
-    <div class="d-flex flex-column pt-10 gap-3 container-fluid flex-lg-row">
-      <div class="card pt-10 px-10">
-        <ul class="nav flex-column">
-          <h3 class="">Categories</h3>
-          <li
-            class="nav-item border-bottom btn"
-            [routerLink]="'../' + category.id"
-            *ngFor="let category of categories"
-          >
-            <div class="d-flex justify-content-between">
-              <a class="nav-link">{{ category.name }}</a>
-              <img
-                src="../../../assets/libs//bootstrap-icons/icons/arrow-right.svg"
-              />
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div class="card"></div>
-      <div *ngFor="let category of category$ | async" class="col">
-        <h2 class="bg-secondary bg-opacity-10 py-10 rounded p-10">
-          {{ category.name }}
-        </h2>
-        <div
-          class="d-flex flex-column flex-md-row justify-content-between pb-10"
-        >
-          <p>{{ products.length }} products found</p>
-
-          <div class="dropdown">
-            <button
-              class="btn btn-secondary dropdown-toggle"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-              aria-placeholder="order"
-            ></button>
-            <ul class="dropdown-menu">
-              <li *ngFor="let order of orders$ | async">
-                <button class="dropdown-item" (click)="sort(order)">
-                  {{ order }}
-                </button>
+  <ng-container *ngIf="productsWithPage$ | async as products">
+    <ng-container *ngIf="productsSorted$ | async as productsSorted">
+      <ng-container *ngIf="orders$ | async as orders">
+        <div class="d-flex flex-column pt-10 gap-3 container-fluid flex-lg-row">
+          <div class="card pt-10 px-10">
+            <ul class="nav flex-column">
+              <h3 class="">Categories</h3>
+              <li
+                class="nav-item border-bottom btn"
+                [routerLink]="['/categories/', category.id]"
+                *ngFor="let category of categories"
+              >
+                <div class="d-flex justify-content-between">
+                  <a class="nav-link">{{ category.name }}</a>
+                  <img
+                    src="../../../assets/libs//bootstrap-icons/icons/arrow-right.svg"
+                  />
+                </div>
               </li>
             </ul>
           </div>
-        </div>
-
-        <div *ngFor="let item of products">
-          <div class="card flex-row p-md-8 px-0">
-            <div>
-              <img [src]="item.imageUrl" [alt]="item" class="mx-auto" />
-            </div>
-            <div class="ms-6 align-self-center">
-              <h5 class="mb-1"></h5>
-              <div class="d-flex flex-column">
-                <span>{{ category.name }}</span>
-                <span class="fw-bold">{{ item.name }}</span>
-                <span> {{ item.ratingValue }} ({{ item.ratingCount }})</span>
-
-                <span class="fw-bold"
-                  >${{ item.price }} {{ item.featureValue }}</span
-                >
+          <div class="card"></div>
+          <div *ngFor="let category of category$ | async" class="col">
+            <h2 class="bg-secondary bg-opacity-10 py-10 rounded p-10">
+              {{ category.name }}
+            </h2>
+            <div
+              class="d-flex flex-column flex-md-row justify-content-between pb-10"
+            >
+              <p>{{ productsSorted.length }} products found</p>
+              <div class="f-flex mt-2 mt-lg-0">
+                <div class="me-2 flex-grow-1">
+                  <select
+                    class="form-select"
+                    name="order"
+                    ng-model="order"
+                    [value]="order"
+                    [formControl]="order"
+                  >
+                    <option *ngFor="let order of orders" [ngValue]="order">
+                      {{ order.label }}
+                    </option>
+                  </select>
+                </div>
               </div>
             </div>
+
+            <div *ngFor="let item of products">
+              <div class="card flex-row p-md-8 px-0">
+                <div>
+                  <img [src]="item.imageUrl" [alt]="item" class="mx-auto" />
+                </div>
+                <div class="ms-6 align-self-center">
+                  <h5 class="mb-1"></h5>
+                  <div class="d-flex flex-column">
+                    <span>{{ category.name }}</span>
+                    <span class="fw-bold">{{ item.name }}</span>
+                    <span>
+                      {{ item.ratingValue }} ({{ item.ratingCount }})</span
+                    >
+
+                    <span class="fw-bold">{{ item.price | currency }} </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pt-10 d-flex flex-row justify-content-between">
+              <nav aria-label="... " class="d-flex flex-column">
+                <h4>Limit</h4>
+                <ul class="pagination pagination-sm">
+                  <li
+                    *ngFor="let limit of limits$ | async"
+                    (click)="setLimit(limit)"
+                    [ngClass]="{
+                      'page-item': (isActiveLimit$ | async) === limit,
+                      'page-item active': (isActiveLimit$ | async) === limit
+                    }"
+                  >
+                    <a class="page-link"> {{ limit }}</a>
+                  </li>
+                </ul>
+              </nav>
+
+              <nav aria-label="... " class="d-flex flex-column">
+                <h4>Page</h4>
+                <ul
+                  class="pagination pagination-sm list-group list-group-horizontal"
+                >
+                  <li
+                    *ngFor="let page of pages$ | async"
+                    [ngClass]="{
+                      'page-item': (isActivePage$ | async) === page,
+                      'page-item active': (isActivePage$ | async) === page
+                    }"
+                    (click)="setPage(page)"
+                  >
+                    <a class="page-link"> {{ page }}</a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
           </div>
         </div>
-        <div class="pt-10 d-flex flex-row justify-content-between">
-          <nav aria-label="... " class="d-flex flex-column">
-            <h4>Limit</h4>
-            <ul class="pagination pagination-sm">
-              <li class="page-item active" aria-current="page">
-                <span class="page-link">1</span>
-              </li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-            </ul>
-          </nav>
-
-          <nav aria-label="... " class="d-flex flex-column">
-            <h4>Page</h4>
-            <ul
-              class="pagination pagination-sm list-group list-group-horizontal"
-            >
-              <li class="page-item active" aria-current="page">
-                <span class="page-link" *ngFor="let page of pages$ | async">{{
-                  page
-                }}</span>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-    </div>
+      </ng-container>
+    </ng-container>
   </ng-container>
 </ng-container>
