@@ -19,6 +19,46 @@
                 </div>
               </li>
             </ul>
+            <label class="form-label fw-bold fs-5">Price</label>
+            <div [formGroup]="filterProducts">
+              <div class="input-group input-group-sm mb-3">
+                <input
+                  formControlName="priceFrom"
+                  type="number"
+                  placeholder="Price from"
+                  class="form-control"
+                  aria-label="Sizing example input"
+                  aria-describedby="inputGroup-sizing-sm"
+                />
+              </div>
+              <div class="input-group input-group-sm mb-3">
+                <input
+                  formControlName="priceTo"
+                  type="number"
+                  placeholder="Price to"
+                  class="form-control"
+                  aria-label="Sizing example input"
+                  aria-describedby="inputGroup-sizing-sm"
+                />
+              </div>
+              <label class="form-label fw-bold fs-5">Rating</label>
+              <div class="input-group input-group-sm mb-3">
+                <div class="form-check mb-2">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="ratingThree"
+                  /><label class="form-check-label" for="ratingThree"
+                    ><i class="bi bi-star-fill text-warning"></i
+                    ><i class="bi bi-star-fill text-warning"></i
+                    ><i class="bi bi-star-fill text-warning"></i
+                    ><i class="bi bi-star text-warning"></i
+                    ><i class="bi bi-star text-warning"></i
+                  ></label>
+                </div>
+              </div>
+              <div class="input-group input-group-sm mb-3"></div>
+            </div>
           </div>
           <div class="card"></div>
           <div *ngFor="let category of category$ | async" class="col">
@@ -34,7 +74,6 @@
                   <select
                     class="form-select"
                     name="order"
-                    ng-model="order"
                     [value]="order"
                     [formControl]="order"
                   >
@@ -59,7 +98,13 @@
                     <span>
                       {{ item.ratingValue }} ({{ item.ratingCount }})</span
                     >
-
+                    <div class="form-check mb-2">
+                      <i class="bi bi-star-fill text-warning"></i
+                      ><i class="bi bi-star-fill text-warning"></i
+                      ><i class="bi bi-star-fill text-warning"></i
+                      ><i class="bi bi-star text-warning"></i
+                      ><i class="bi bi-star text-warning"></i>
+                    </div>
                     <span class="fw-bold">{{ item.price | currency }} </span>
                   </div>
                 </div>
@@ -73,7 +118,6 @@
                     *ngFor="let limit of limits$ | async"
                     (click)="setLimit(limit)"
                     [ngClass]="{
-                      'page-item': (isActiveLimit$ | async) === limit,
                       'page-item active': (isActiveLimit$ | async) === limit
                     }"
                   >
@@ -90,7 +134,6 @@
                   <li
                     *ngFor="let page of pages$ | async"
                     [ngClass]="{
-                      'page-item': (isActivePage$ | async) === page,
                       'page-item active': (isActivePage$ | async) === page
                     }"
                     (click)="setPage(page)"

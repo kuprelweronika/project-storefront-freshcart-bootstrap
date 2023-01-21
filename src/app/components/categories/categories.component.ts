@@ -3,12 +3,13 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
   BehaviorSubject,
   Observable,
   combineLatest,
+  from,
   map,
   of,
   shareReplay,
@@ -32,11 +33,22 @@ import { ProductsService } from '../../services/products.service';
 export class CategoriesComponent {
   readonly order: FormControl = new FormControl('');
 
+  readonly filterProducts: FormGroup = new FormGroup({
+    priceFrom: new FormControl(),
+    priceTo: new FormControl(),
+    ratingFrom: new FormControl(),
+    ratingTo: new FormControl(),
+  });
+
   //all categories for left-navbar
   readonly categories$: Observable<CategoryModel[]> =
     this._categoriesService.getAllCategories();
 
   readonly limits$: Observable<number[]> = of([5, 10, 15]);
+
+  readonly rating$: Observable<number[]> = of([2, 3, 4, 5]);
+
+  howMuchRating(products: ProductModel[]) {}
 
   readonly orders$: Observable<SortQueryModel[]> = of([
     { label: 'Featured', ids: 'featuredValue', direction: 'desc' },
@@ -117,6 +129,55 @@ export class CategoriesComponent {
     })
   );
 
+  //list of products after sorting and after filtering by Price
+  readonly productsFilteredByPrice$: Observable<ProductModel[]> = combineLatest(
+    [
+      this.productsSorted$,
+
+      //problem with null, think about it
+      //@ts-ignore
+      this.filterProducts.get('priceFrom').valueChanges.pipe(startWith(1)),
+      //@ts-ignore
+      this.filterProducts.get('priceTo').valueChanges.pipe(startWith(2000)),
+    ]
+  ).pipe(
+    map(([products, priceFrom, priceTo]: [ProductModel[], number, number]) => {
+      if (priceFrom > 1) {
+        return products.filter(
+          (product) => product.price > priceFrom && product.price < priceTo
+        );
+      } else {
+        return products.filter(
+          (product) => product.price > priceFrom && product.price < priceTo
+        );
+      }
+    })
+  );
+
+  readonly productsFilteredByRating$: Observable<ProductModel[]> =
+    combineLatest([
+      this.productsSorted$,
+
+      //problem with null, think about it
+      //@ts-ignore
+      this.filterProducts.get('priceFrom').valueChanges.pipe(startWith(1)),
+      //@ts-ignore
+      this.filterProducts.get('priceTo').valueChanges.pipe(startWith(2000)),
+    ]).pipe(
+      map(
+        ([products, priceFrom, priceTo]: [ProductModel[], number, number]) => {
+          if (priceFrom > 1) {
+            return products.filter(
+              (product) => product.price > priceFrom && product.price < priceTo
+            );
+          } else {
+            return products.filter(
+              (product) => product.price > priceFrom && product.price < priceTo
+            );
+          }
+        }
+      )
+    );
   //create array with pages
   public pages$: Observable<number[]> = combineLatest([
     this.productsSorted$,
@@ -132,7 +193,7 @@ export class CategoriesComponent {
   //create 1 page list of products with page and limit
   readonly productsWithPage$: Observable<ProductModel[]> = combineLatest([
     this.paginationState,
-    this.productsSorted$,
+    this.productsFilteredByRating$,
   ]).pipe(
     map(([pagination, products]) =>
       products.slice(
