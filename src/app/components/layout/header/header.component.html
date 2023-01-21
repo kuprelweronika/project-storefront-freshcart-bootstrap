@@ -1,0 +1,34 @@
+<ng-container *ngIf="categories$ | async as categories">
+  <div class="header border-bottom">
+    <nav class="navbar navbar-expand-md navbar-light">
+      <div class="container-fluid">
+        <img
+          src="../../../assets/images/logo/freshcart-logo.svg"
+          class="navbar-brand w-5"
+        />
+        <button class="navbar-toggler" (click)="toggleMenu()">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div *ngIf="menuToggler$ | async as toggler">
+          <div class="offcanvas offcanvas-start">
+            <ul
+              [ngClass]="
+                toggler === true
+                  ? 'mb-2 mb-lg-0 navbar-nav offcanvas '
+                  : 'mb-2 mb-lg-0 navbar-nav offcanvas-start '
+              "
+            >
+              <li class="nav-item" *ngFor="let category of categories">
+                <a
+                  class="nav-link"
+                  [routerLink]="'categories/' + category.id"
+                  >{{ category.name }}</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div></ng-container
+>
