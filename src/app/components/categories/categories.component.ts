@@ -22,6 +22,8 @@ import { SortQueryModel } from '../../models/sort-query.model';
 import { ProductModel } from '../../models/product.model';
 import { CategoriesService } from '../../services/categories.service';
 import { ProductsService } from '../../services/products.service';
+import { StoreModel } from 'src/app/models/store.model';
+import { StoresService } from 'src/app/services/stores.service';
 
 @Component({
   selector: 'app-categories',
@@ -38,8 +40,12 @@ export class CategoriesComponent {
     priceTo: new FormControl(),
     ratingFrom: new FormControl(),
     ratingTo: new FormControl(),
+    stores: new FormControl(),
   });
+  selectedStore: string[] = ['2'];
 
+  readonly stores$: Observable<StoreModel[]> =
+    this._storesService.getAllStores();
   //all categories for left-navbar
   readonly categories$: Observable<CategoryModel[]> =
     this._categoriesService.getAllCategories();
@@ -47,8 +53,6 @@ export class CategoriesComponent {
   readonly limits$: Observable<number[]> = of([5, 10, 15]);
 
   readonly rating$: Observable<number[]> = of([2, 3, 4, 5]);
-
-  howMuchRating(products: ProductModel[]) {}
 
   readonly orders$: Observable<SortQueryModel[]> = of([
     { label: 'Featured', ids: 'featuredValue', direction: 'desc' },
@@ -133,7 +137,6 @@ export class CategoriesComponent {
   readonly productsFilteredByPrice$: Observable<ProductModel[]> = combineLatest(
     [
       this.productsSorted$,
-
       //problem with null, think about it
       //@ts-ignore
       this.filterProducts.get('priceFrom').valueChanges.pipe(startWith(1)),
@@ -154,30 +157,15 @@ export class CategoriesComponent {
     })
   );
 
-  readonly productsFilteredByRating$: Observable<ProductModel[]> =
-    combineLatest([
-      this.productsSorted$,
-
-      //problem with null, think about it
-      //@ts-ignore
-      this.filterProducts.get('priceFrom').valueChanges.pipe(startWith(1)),
-      //@ts-ignore
-      this.filterProducts.get('priceTo').valueChanges.pipe(startWith(2000)),
-    ]).pipe(
-      map(
-        ([products, priceFrom, priceTo]: [ProductModel[], number, number]) => {
-          if (priceFrom > 1) {
-            return products.filter(
-              (product) => product.price > priceFrom && product.price < priceTo
-            );
-          } else {
-            return products.filter(
-              (product) => product.price > priceFrom && product.price < priceTo
-            );
-          }
-        }
-      )
+  readonly productsFilteredByStore$: Observable<ProductModel[]> =
+    this.productsFilteredByPrice$.pipe(
+      map((products: ProductModel[]) => {
+        return products.filter((product) =>
+          product.storeIds.sort().includes(this.selectedStore.toString())
+        );
+      })
     );
+
   //create array with pages
   public pages$: Observable<number[]> = combineLatest([
     this.productsSorted$,
@@ -193,7 +181,7 @@ export class CategoriesComponent {
   //create 1 page list of products with page and limit
   readonly productsWithPage$: Observable<ProductModel[]> = combineLatest([
     this.paginationState,
-    this.productsFilteredByRating$,
+    this.productsFilteredByStore$,
   ]).pipe(
     map(([pagination, products]) =>
       products.slice(
@@ -207,7 +195,8 @@ export class CategoriesComponent {
     private _categoriesService: CategoriesService,
     private _activatedRoute: ActivatedRoute,
     private _productsService: ProductsService,
-    private _router: Router
+    private _router: Router,
+    private _storesService: StoresService
   ) {}
 
   setPage(page: number) {
@@ -241,5 +230,16 @@ export class CategoriesComponent {
         })
       )
       .subscribe();
+  }
+
+  onStoreChange(event: Event, store: StoreModel) {
+    if (this.selectedStore.includes(store.id)) {
+      this.selectedStore = this.selectedStore
+        .filter(function (item) {
+          return item !== store.id;
+        })
+        .sort();
+    } else this.selectedStore.push(store.id);
+    this.selectedStore.sort();
   }
 }

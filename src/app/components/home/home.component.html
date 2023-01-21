@@ -1,5 +1,5 @@
 <ng-container *ngIf="categories$ | async as categories">
-  <ng-container *ngIf="stores$ | async as stores">
+  <ng-container *ngIf="storesWithTags$ | async as stores">
     <ng-container *ngIf="productsFruits$ | async as productsFruitsVegetable">
       <ng-container *ngIf="productsSnacks$ | async as productsSnacks">
         <div class="container-fluid px-sm-16 px-md-12">
@@ -64,6 +64,12 @@
               <img src="{{ store.logoUrl }}" class="img-fluid rounded-circle" />
               <div class="d-flex align-self-center flex-column">
                 <h6 class="px-2">{{ store.name }}</h6>
+                <span
+                  class="fs-6 secondary fw-lighter"
+                  *ngFor="let storeTag of store.tagIds"
+                >
+                  {{ storeTag }}
+                </span>
                 <div class="badge bg-secondary align-self-center">
                   {{ store.distanceInMeters }} km
                 </div>
