@@ -1,5 +1,5 @@
 <ng-container *ngIf="categories$ | async as categories">
-  <ng-container *ngIf="productsFilteredByStoreOrRating$ | async as products">
+  <ng-container *ngIf="productsWithPage$ | async as products">
     <ng-container *ngIf="productsSorted$ | async as productsSorted">
       <ng-container *ngIf="productsWithStars$ | async as stars">
         <ng-container *ngIf="orders$ | async as orders">

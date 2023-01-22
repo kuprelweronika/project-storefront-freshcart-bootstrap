@@ -221,7 +221,7 @@ export class CategoriesComponent {
 
   //create array with pages
   public pages$: Observable<number[]> = combineLatest([
-    this.productsSorted$,
+    this.productsFilteredByStoreOrRating$,
     this.paginationState,
   ]).pipe(
     map(([data, pagination]) => {
