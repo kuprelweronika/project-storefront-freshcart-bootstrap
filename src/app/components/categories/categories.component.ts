@@ -16,6 +16,7 @@ import {
   startWith,
   take,
   tap,
+  filter,
 } from 'rxjs';
 import { CategoryModel } from '../../models/category.model';
 import { SortQueryModel } from '../../models/sort-query.model';
@@ -42,25 +43,35 @@ export class CategoriesComponent {
     ratingFrom: new FormControl(),
     ratingTo: new FormControl(),
     stores: new FormControl(),
+    rating: new FormControl(),
   });
-  selectedStore: string[] = ['2'];
+  selectedStore: string[] = [];
+  selectedRating: number[] = [];
 
   readonly stores$: Observable<StoreModel[]> =
     this._storesService.getAllStores();
   //all categories for left-navbar
   readonly categories$: Observable<CategoryModel[]> =
     this._categoriesService.getAllCategories();
-
   readonly limits$: Observable<number[]> = of([5, 10, 15]);
-
   readonly rating$: Observable<number[]> = of([2, 3, 4, 5]);
-
   readonly orders$: Observable<SortQueryModel[]> = of([
     { label: 'Featured', ids: 'featuredValue', direction: 'desc' },
     { label: 'Price: Low to High', ids: 'price', direction: 'asc' },
     { label: 'Price: High to Low', ids: 'price', direction: 'desc' },
     { label: 'Avg. Rating', ids: 'ratingValue', direction: 'desc' },
   ]);
+
+  private _isActivePageSubject: BehaviorSubject<number> =
+    new BehaviorSubject<number>(1);
+
+  public isActivePage$: Observable<number> =
+    this._isActivePageSubject.asObservable();
+
+  private _isActiveLimitSubject: BehaviorSubject<number> =
+    new BehaviorSubject<number>(5);
+  public isActiveLimit$: Observable<number> =
+    this._isActiveLimitSubject.asObservable();
 
   readonly category$: Observable<CategoryModel[]> = combineLatest([
     this.categories$,
@@ -73,16 +84,6 @@ export class CategoriesComponent {
     })
   );
   //behaviorSubject for active button in pagination
-  private _isActivePageSubject: BehaviorSubject<number> =
-    new BehaviorSubject<number>(1);
-
-  public isActivePage$: Observable<number> =
-    this._isActivePageSubject.asObservable();
-
-  private _isActiveLimitSubject: BehaviorSubject<number> =
-    new BehaviorSubject<number>(5);
-  public isActiveLimit$: Observable<number> =
-    this._isActiveLimitSubject.asObservable();
 
   //actual pagination state
   readonly paginationState: Observable<{ limit: number; page: number }> =
@@ -117,24 +118,6 @@ export class CategoriesComponent {
       return products.sort((a, b) => (a[order.ids] > b[order.ids] ? -1 : 1));
     }
   }
-
-  readonly productsWithStars$: Observable<ProductQueryModel[]> =
-    this.products$.pipe(
-      map((products) => {
-        return products.map((product) => ({
-          name: product.name,
-          price: product.price,
-          categoryId: product.categoryId,
-          ratingValue: this.changeNumToArray(product.ratingValue),
-          ratingValueNum: product.ratingValue,
-          ratingCount: product.ratingCount,
-          imageUrl: product.imageUrl,
-          featureValue: product.featureValue,
-          storeIds: product.storeIds,
-          id: product.id,
-        }));
-      })
-    );
 
   //list of products after  sorting
   readonly productsSorted$: Observable<ProductModel[]> = combineLatest([
@@ -176,12 +159,39 @@ export class CategoriesComponent {
     })
   );
 
-  readonly productsFilteredByStore$: Observable<ProductModel[]> =
-    this.productsFilteredByPrice$.pipe(
-      map((products: ProductModel[]) => {
-        return products.filter((product) =>
-          product.storeIds.sort().includes(this.selectedStore.toString())
-        );
+  readonly productsFilteredByStore$: Observable<ProductModel[]> = combineLatest(
+    [
+      this.productsFilteredByPrice$,
+      //@ts-ignore
+      this.filterProducts.get('stores').valueChanges.pipe(startWith([])),
+    ]
+  ).pipe(
+    map(([products]) => {
+      return products.filter((product) => {
+        if (this.selectedStore.length === 0) {
+          return true;
+        } else {
+          return this.selectedStore.some((ai) => product.storeIds.includes(ai));
+        }
+      });
+    })
+  );
+
+  readonly productsWithStars$: Observable<ProductQueryModel[]> =
+    this.productsFilteredByStore$.pipe(
+      map((products) => {
+        return products.map((product) => ({
+          name: product.name,
+          price: product.price,
+          categoryId: product.categoryId,
+          ratingValue: this.changeNumToArray(product.ratingValue),
+          ratingValueNum: product.ratingValue,
+          ratingCount: product.ratingCount,
+          imageUrl: product.imageUrl,
+          featureValue: product.featureValue,
+          storeIds: product.storeIds,
+          id: product.id,
+        }));
       })
     );
 
@@ -218,6 +228,26 @@ export class CategoriesComponent {
     private _storesService: StoresService
   ) {}
 
+  changeNumToArray(num: number) {
+    let t = num - Math.floor(num);
+    let num1;
+    if (t >= 0.3 && t <= 0.7) {
+      num1 = Math.floor(num) + 0.5;
+    } else if (t > 0.7) {
+      num1 = Math.ceil(num);
+    } else {
+      num1 = Math.floor(num);
+    }
+    let testArray = [1, 1, 1, 1, 1];
+    testArray.fill(0, num1);
+    for (let i = 0.5; i < 5; i++) {
+      if (i === num1) {
+        testArray.fill(0.5, i - 0.5, i + 0.5);
+      } else {
+      }
+    }
+    return testArray;
+  }
   setPage(page: number) {
     this._isActivePageSubject.next(page);
     this.paginationState
@@ -251,27 +281,17 @@ export class CategoriesComponent {
       .subscribe();
   }
 
-  changeNumToArray(num: number) {
-    let t = num - Math.floor(num);
-    let num1;
-    if (t >= 0.3 && t <= 0.7) {
-      num1 = Math.floor(num) + 0.5;
-    } else if (t > 0.7) {
-      num1 = Math.ceil(num);
-    } else {
-      num1 = Math.floor(num);
-    }
-    let testArray = [1, 1, 1, 1, 1];
-    testArray.fill(0, num1);
-    for (let i = 0.5; i < 5; i++) {
-      if (i === num1) {
-        testArray.fill(0.5, i - 0.5, i + 0.5);
-      } else {
-      }
-    }
-    return testArray;
+  onRatingChange(event: Event, rating: number) {
+    if (this.selectedRating.includes(rating)) {
+      this.selectedRating = this.selectedRating
+        .filter(function (item) {
+          return item !== rating;
+        })
+        .sort();
+    } else this.selectedRating.push(rating);
+    this.selectedRating.sort();
+    console.log(this.selectedRating);
   }
-
   onStoreChange(event: Event, store: StoreModel) {
     if (this.selectedStore.includes(store.id)) {
       this.selectedStore = this.selectedStore
@@ -281,5 +301,6 @@ export class CategoriesComponent {
         .sort();
     } else this.selectedStore.push(store.id);
     this.selectedStore.sort();
+    console.log(this.selectedStore);
   }
 }
