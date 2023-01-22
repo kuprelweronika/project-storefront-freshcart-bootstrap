@@ -24,6 +24,7 @@ import { CategoriesService } from '../../services/categories.service';
 import { ProductsService } from '../../services/products.service';
 import { StoreModel } from 'src/app/models/store.model';
 import { StoresService } from 'src/app/services/stores.service';
+import { ProductQueryModel } from 'src/app/models/product-query.model';
 
 @Component({
   selector: 'app-categories',
@@ -116,6 +117,24 @@ export class CategoriesComponent {
       return products.sort((a, b) => (a[order.ids] > b[order.ids] ? -1 : 1));
     }
   }
+
+  readonly productsWithStars$: Observable<ProductQueryModel[]> =
+    this.products$.pipe(
+      map((products) => {
+        return products.map((product) => ({
+          name: product.name,
+          price: product.price,
+          categoryId: product.categoryId,
+          ratingValue: this.changeNumToArray(product.ratingValue),
+          ratingValueNum: product.ratingValue,
+          ratingCount: product.ratingCount,
+          imageUrl: product.imageUrl,
+          featureValue: product.featureValue,
+          storeIds: product.storeIds,
+          id: product.id,
+        }));
+      })
+    );
 
   //list of products after  sorting
   readonly productsSorted$: Observable<ProductModel[]> = combineLatest([
@@ -230,6 +249,27 @@ export class CategoriesComponent {
         })
       )
       .subscribe();
+  }
+
+  changeNumToArray(num: number) {
+    let t = num - Math.floor(num);
+    let num1;
+    if (t >= 0.3 && t <= 0.7) {
+      num1 = Math.floor(num) + 0.5;
+    } else if (t > 0.7) {
+      num1 = Math.ceil(num);
+    } else {
+      num1 = Math.floor(num);
+    }
+    let testArray = [1, 1, 1, 1, 1];
+    testArray.fill(0, num1);
+    for (let i = 0.5; i < 5; i++) {
+      if (i === num1) {
+        testArray.fill(0.5, i - 0.5, i + 0.5);
+      } else {
+      }
+    }
+    return testArray;
   }
 
   onStoreChange(event: Event, store: StoreModel) {
