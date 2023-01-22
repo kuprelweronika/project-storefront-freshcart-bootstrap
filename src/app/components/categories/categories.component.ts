@@ -35,7 +35,7 @@ import { ProductQueryModel } from 'src/app/models/product-query.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoriesComponent {
-  readonly order: FormControl = new FormControl('');
+  readonly order: FormControl = new FormControl();
 
   readonly filterProducts: FormGroup = new FormGroup({
     priceFrom: new FormControl(),
@@ -159,26 +159,50 @@ export class CategoriesComponent {
     })
   );
 
-  readonly productsFilteredByStore$: Observable<ProductModel[]> = combineLatest(
-    [
+  readonly productsFilteredByStoreOrRating$: Observable<ProductModel[]> =
+    combineLatest([
       this.productsFilteredByPrice$,
       //@ts-ignore
       this.filterProducts.get('stores').valueChanges.pipe(startWith([])),
-    ]
-  ).pipe(
-    map(([products]) => {
-      return products.filter((product) => {
-        if (this.selectedStore.length === 0) {
-          return true;
-        } else {
-          return this.selectedStore.some((ai) => product.storeIds.includes(ai));
-        }
-      });
-    })
-  );
+      //@ts-ignore
+      this.filterProducts.get('rating').valueChanges.pipe(startWith([])),
+    ]).pipe(
+      map(([products]) => {
+        return products.filter((product) => {
+          //@ts-ignore
+          if (
+            this.selectedStore.length === 0 &&
+            this.selectedRating.length === 0
+          ) {
+            return true;
+          } else if (
+            this.selectedStore.length !== 0 &&
+            this.selectedRating.length !== 0
+          ) {
+            return (
+              this.selectedStore.some((ai) => product.storeIds.includes(ai)) &&
+              this.selectedRating.includes(
+                this.roundNumber(product.ratingValue)
+              )
+            );
+          } else if (this.selectedStore.length !== 0) {
+            return this.selectedStore.some((ai) =>
+              product.storeIds.includes(ai)
+            );
+          } else if (this.selectedRating.length != 0) {
+            console.log('this');
+            return this.selectedRating.includes(
+              this.roundNumber(product.ratingValue)
+            );
+          } else {
+            return true;
+          }
+        });
+      })
+    );
 
   readonly productsWithStars$: Observable<ProductQueryModel[]> =
-    this.productsFilteredByStore$.pipe(
+    this.productsFilteredByStoreOrRating$.pipe(
       map((products) => {
         return products.map((product) => ({
           name: product.name,
@@ -210,7 +234,7 @@ export class CategoriesComponent {
   //create 1 page list of products with page and limit
   readonly productsWithPage$: Observable<ProductModel[]> = combineLatest([
     this.paginationState,
-    this.productsFilteredByStore$,
+    this.productsFilteredByStoreOrRating$,
   ]).pipe(
     map(([pagination, products]) =>
       products.slice(
@@ -228,16 +252,20 @@ export class CategoriesComponent {
     private _storesService: StoresService
   ) {}
 
-  changeNumToArray(num: number) {
+  roundNumber(num: number) {
     let t = num - Math.floor(num);
     let num1;
     if (t >= 0.3 && t <= 0.7) {
-      num1 = Math.floor(num) + 0.5;
+      return (num1 = Math.floor(num) + 0.5);
     } else if (t > 0.7) {
-      num1 = Math.ceil(num);
+      return (num1 = Math.ceil(num));
     } else {
-      num1 = Math.floor(num);
+      return (num1 = Math.floor(num));
     }
+  }
+
+  changeNumToArray(num: number) {
+    let num1 = this.roundNumber(num);
     let testArray = [1, 1, 1, 1, 1];
     testArray.fill(0, num1);
     for (let i = 0.5; i < 5; i++) {
@@ -281,7 +309,7 @@ export class CategoriesComponent {
       .subscribe();
   }
 
-  onRatingChange(event: Event, rating: number) {
+  onRatingFilterChange(event: Event, rating: number) {
     if (this.selectedRating.includes(rating)) {
       this.selectedRating = this.selectedRating
         .filter(function (item) {
@@ -290,9 +318,8 @@ export class CategoriesComponent {
         .sort();
     } else this.selectedRating.push(rating);
     this.selectedRating.sort();
-    console.log(this.selectedRating);
   }
-  onStoreChange(event: Event, store: StoreModel) {
+  onStoreFilterChange(event: Event, store: StoreModel) {
     if (this.selectedStore.includes(store.id)) {
       this.selectedStore = this.selectedStore
         .filter(function (item) {

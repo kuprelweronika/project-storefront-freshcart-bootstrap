@@ -1,5 +1,5 @@
 <ng-container *ngIf="categories$ | async as categories">
-  <ng-container *ngIf="productsFilteredByStore$ | async as products">
+  <ng-container *ngIf="productsFilteredByStoreOrRating$ | async as products">
     <ng-container *ngIf="productsSorted$ | async as productsSorted">
       <ng-container *ngIf="productsWithStars$ | async as stars">
         <ng-container *ngIf="orders$ | async as orders">
@@ -30,7 +30,7 @@
                 >
                   <input
                     [id]="store"
-                    (click)="onStoreChange($event, store)"
+                    (click)="onStoreFilterChange($event, store)"
                     class="form-check-input"
                     type="checkbox"
                     value="store"
@@ -67,6 +67,42 @@
                       class="form-check-input"
                       type="checkbox"
                       id="ratingThree"
+                      formControlName="rating"
+                      (click)="onRatingFilterChange($event, 5)"
+                    /><label class="form-check-label" for="ratingThree"
+                      ><i class="bi bi-star-fill text-warning"></i
+                      ><i class="bi bi-star-fill text-warning"></i
+                      ><i class="bi bi-star-fill text-warning"></i
+                      ><i class="bi bi-star-fill text-warning"></i
+                      ><i class="bi bi-star-fill text-warning"></i
+                    ></label>
+                  </div>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                  <div class="form-check mb-2">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="ratingThree"
+                      formControlName="rating"
+                      (click)="onRatingFilterChange($event, 4)"
+                    /><label class="form-check-label" for="ratingThree"
+                      ><i class="bi bi-star-fill text-warning"></i
+                      ><i class="bi bi-star-fill text-warning"></i
+                      ><i class="bi bi-star-fill text-warning"></i
+                      ><i class="bi bi-star-fill text-warning"></i
+                      ><i class="bi bi-star text-warning"></i
+                    ></label>
+                  </div>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                  <div class="form-check mb-2">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="ratingThree"
+                      formControlName="rating"
+                      (click)="onRatingFilterChange($event, 3)"
                     /><label class="form-check-label" for="ratingThree"
                       ><i class="bi bi-star-fill text-warning"></i
                       ><i class="bi bi-star-fill text-warning"></i
@@ -76,6 +112,24 @@
                     ></label>
                   </div>
                 </div>
+                <div class="input-group input-group-sm mb-3">
+                  <div class="form-check mb-2">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="ratingThree"
+                      formControlName="rating"
+                      (click)="onRatingFilterChange($event, 2)"
+                    /><label class="form-check-label" for="ratingThree"
+                      ><i class="bi bi-star-fill text-warning"></i
+                      ><i class="bi bi-star-fill text-warning"></i
+                      ><i class="bi bi-star text-warning"></i
+                      ><i class="bi bi-star text-warning"></i
+                      ><i class="bi bi-star text-warning"></i
+                    ></label>
+                  </div>
+                </div>
+
                 <div class="input-group input-group-sm mb-3"></div>
               </div>
             </div>
