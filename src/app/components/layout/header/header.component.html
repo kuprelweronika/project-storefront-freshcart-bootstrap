@@ -9,7 +9,7 @@
         </div>
       </div>
     </div>
-    <nav class="navbar navbar-expand-lg bg-white">
+    <nav class="navbar bg-white">
       <div class="container-fluid">
         <a class="navbar-brand" routerLink="/">
           <img
@@ -17,31 +17,43 @@
             alt="eCommerce HTML Template"
           />
         </a>
+
         <button
-          class="navbar-toggler"
           type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#menu"
-          aria-controls="menu"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
+          class="btn d-lg-none"
+          (click)="isCollapsed = !isCollapsed"
+          [attr.aria-expanded]="!isCollapsed"
+          aria-controls="collapseBasic"
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-
-        <div class="collapse navbar-collapse" id="menu">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item" *ngFor="let category of categories">
-              <a
-                class="nav-link active"
-                aria-current="page"
-                [routerLink]="'categories/' + category.id"
-                >{{ category.name }}</a
-              >
-            </li>
-          </ul>
+        <hr />
+        <div id="collapseBasic" *ngIf="isCollapsed" class="d-lg-none">
+          <div class="well well-lg card card-block card-header">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item" *ngFor="let category of categories">
+                <a
+                  class="nav-link active"
+                  aria-current="page"
+                  [routerLink]="'categories/' + category.id"
+                  >{{ category.name }}</a
+                >
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
+
+      <ul class="navbar-nav d-lg-flex flex-row d-none">
+        <li *ngFor="let item of categories$ | async" class="nav-item">
+          <a
+            class="nav-link"
+            [routerLink]="'categories/' + item.id"
+            role="button"
+            >{{ item.name }}</a
+          >
+        </li>
+      </ul>
     </nav>
   </header>
 </ng-container>
