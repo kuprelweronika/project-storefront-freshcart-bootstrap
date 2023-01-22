@@ -1,34 +1,47 @@
 <ng-container *ngIf="categories$ | async as categories">
-  <div class="header border-bottom">
-    <nav class="navbar navbar-expand-md navbar-light">
-      <div class="container-fluid">
-        <img
-          src="../../../assets/images/logo/freshcart-logo.svg"
-          class="navbar-brand w-5"
-        />
-        <button class="navbar-toggler" (click)="toggleMenu()">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div *ngIf="menuToggler$ | async as toggler">
-          <div class="offcanvas offcanvas-start">
-            <ul
-              [ngClass]="
-                toggler === true
-                  ? 'mb-2 mb-lg-0 navbar-nav offcanvas '
-                  : 'mb-2 mb-lg-0 navbar-nav offcanvas-start '
-              "
-            >
-              <li class="nav-item" *ngFor="let category of categories">
-                <a
-                  class="nav-link"
-                  [routerLink]="'categories/' + category.id"
-                  >{{ category.name }}</a
-                >
-              </li>
-            </ul>
+  <header class="border-bottom">
+    <div class="bg-light py-1">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 col-12 text-center text-md-start">
+            <span> Super Value Deals - Save more with coupons</span>
           </div>
         </div>
       </div>
+    </div>
+    <nav class="navbar navbar-expand-lg bg-white">
+      <div class="container-fluid">
+        <a class="navbar-brand" routerLink="/">
+          <img
+            src="/assets/images/logo/freshcart-logo.svg"
+            alt="eCommerce HTML Template"
+          />
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#menu"
+          aria-controls="menu"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="menu">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item" *ngFor="let category of categories">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                [routerLink]="'categories/' + category.id"
+                >{{ category.name }}</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
     </nav>
-  </div></ng-container
->
+  </header>
+</ng-container>

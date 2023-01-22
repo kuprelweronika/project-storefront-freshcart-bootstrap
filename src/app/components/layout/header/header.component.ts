@@ -18,14 +18,5 @@ export class HeaderComponent {
   readonly categories$: Observable<CategoryModel[]> =
     this._categoriesService.getAllCategories();
 
-  private _menuTogglerSubject: BehaviorSubject<boolean> =
-    new BehaviorSubject<boolean>(true);
-  public menuToggler$: Observable<boolean> =
-    this._menuTogglerSubject.asObservable();
-
-  toggleMenu() {
-    this._menuTogglerSubject.next(!this._menuTogglerSubject.value);
-  }
-
   constructor(private _categoriesService: CategoriesService) {}
 }
