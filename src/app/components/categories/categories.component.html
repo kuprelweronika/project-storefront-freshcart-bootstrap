@@ -3,227 +3,236 @@
     <ng-container *ngIf="productsSorted$ | async as productsSorted">
       <ng-container *ngIf="productsWithStars$ | async as stars">
         <ng-container *ngIf="orders$ | async as orders">
-          <div
-            class="d-flex flex-column pt-10 gap-3 container-fluid flex-lg-row"
-          >
-            <div class="card pt-10 px-10">
-              <ul class="nav flex-column">
-                <h3 class="">Categories</h3>
-                <li
-                  class="nav-item border-bottom btn"
-                  [routerLink]="['/categories/', category.id]"
-                  *ngFor="let category of categories"
-                >
-                  <div class="d-flex justify-content-between">
-                    <a class="nav-link">{{ category.name }}</a>
-                    <img
-                      src="../../../assets/libs//bootstrap-icons/icons/arrow-right.svg"
+          <ng-container *ngIf="stores$ | async as stores">
+            <div
+              class="d-flex flex-column pt-10 gap-3 container-fluid flex-lg-row"
+            >
+              <div class="card pt-10 px-10">
+                <ul class="nav flex-column">
+                  <h3 class="">Categories</h3>
+                  <li
+                    class="nav-item border-bottom btn"
+                    [routerLink]="['/categories/', category.id]"
+                    *ngFor="let category of categories"
+                  >
+                    <div class="d-flex justify-content-between">
+                      <a class="nav-link">{{ category.name }}</a>
+                      <img
+                        src="../../../assets/libs//bootstrap-icons/icons/arrow-right.svg"
+                      />
+                    </div>
+                  </li>
+                </ul>
+                <label class="form-label fw-bold fs-5">Stores</label>
+
+                <div [formGroup]="filterProducts">
+                  <input
+                    class="form-control mb-3"
+                    formControlName="searchByStore"
+                    placeholder="Search by store..."
+                    type="text"
+                  />
+
+                  <div *ngFor="let store of stores" class="form-check mb-2">
+                    <input
+                      [id]="store"
+                      (click)="onStoreFilterChange($event, store)"
+                      class="form-check-input"
+                      type="checkbox"
+                      value="store"
+                      formControlName="stores"
+                    /><label [for]="store" class="form-check-label">{{
+                      store.name
+                    }}</label>
+                  </div>
+                  <label class="form-label fw-bold fs-5">Price</label>
+                  <div class="input-group input-group-sm mb-3">
+                    <input
+                      formControlName="priceFrom"
+                      type="number"
+                      placeholder="Price from"
+                      class="form-control"
+                      aria-label="Sizing example input"
+                      aria-describedby="inputGroup-sizing-sm"
                     />
                   </div>
-                </li>
-              </ul>
-              <label class="form-label fw-bold fs-5">Stores</label>
-              <div [formGroup]="filterProducts">
+                  <div class="input-group input-group-sm mb-3">
+                    <input
+                      formControlName="priceTo"
+                      type="number"
+                      placeholder="Price to"
+                      class="form-control"
+                      aria-label="Sizing example input"
+                      aria-describedby="inputGroup-sizing-sm"
+                    />
+                  </div>
+                  <label class="form-label fw-bold fs-5">Rating</label>
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="form-check mb-2">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="ratingThree"
+                        formControlName="rating"
+                        (click)="onRatingFilterChange($event, 5)"
+                      /><label class="form-check-label" for="ratingThree"
+                        ><i class="bi bi-star-fill text-warning"></i
+                        ><i class="bi bi-star-fill text-warning"></i
+                        ><i class="bi bi-star-fill text-warning"></i
+                        ><i class="bi bi-star-fill text-warning"></i
+                        ><i class="bi bi-star-fill text-warning"></i
+                      ></label>
+                    </div>
+                  </div>
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="form-check mb-2">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="ratingThree"
+                        formControlName="rating"
+                        (click)="onRatingFilterChange($event, 4)"
+                      /><label class="form-check-label" for="ratingThree"
+                        ><i class="bi bi-star-fill text-warning"></i
+                        ><i class="bi bi-star-fill text-warning"></i
+                        ><i class="bi bi-star-fill text-warning"></i
+                        ><i class="bi bi-star-fill text-warning"></i
+                        ><i class="bi bi-star text-warning"></i
+                      ></label>
+                    </div>
+                  </div>
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="form-check mb-2">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="ratingThree"
+                        formControlName="rating"
+                        (click)="onRatingFilterChange($event, 3)"
+                      /><label class="form-check-label" for="ratingThree"
+                        ><i class="bi bi-star-fill text-warning"></i
+                        ><i class="bi bi-star-fill text-warning"></i
+                        ><i class="bi bi-star-fill text-warning"></i
+                        ><i class="bi bi-star text-warning"></i
+                        ><i class="bi bi-star text-warning"></i
+                      ></label>
+                    </div>
+                  </div>
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="form-check mb-2">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="ratingThree"
+                        formControlName="rating"
+                        (click)="onRatingFilterChange($event, 2)"
+                      /><label class="form-check-label" for="ratingThree"
+                        ><i class="bi bi-star-fill text-warning"></i
+                        ><i class="bi bi-star-fill text-warning"></i
+                        ><i class="bi bi-star text-warning"></i
+                        ><i class="bi bi-star text-warning"></i
+                        ><i class="bi bi-star text-warning"></i
+                      ></label>
+                    </div>
+                  </div>
+
+                  <div class="input-group input-group-sm mb-3"></div>
+                </div>
+              </div>
+              <div class="card"></div>
+              <div *ngFor="let category of category$ | async" class="col">
+                <h2 class="bg-secondary bg-opacity-10 py-10 rounded p-10">
+                  {{ category.name }}
+                </h2>
                 <div
-                  *ngFor="let store of stores$ | async"
-                  class="form-check mb-2"
+                  class="d-flex flex-column flex-md-row justify-content-between pb-10"
                 >
-                  <input
-                    [id]="store"
-                    (click)="onStoreFilterChange($event, store)"
-                    class="form-check-input"
-                    type="checkbox"
-                    value="store"
-                    formControlName="stores"
-                  /><label [for]="store" class="form-check-label">{{
-                    store.name
-                  }}</label>
-                </div>
-                <label class="form-label fw-bold fs-5">Price</label>
-                <div class="input-group input-group-sm mb-3">
-                  <input
-                    formControlName="priceFrom"
-                    type="number"
-                    placeholder="Price from"
-                    class="form-control"
-                    aria-label="Sizing example input"
-                    aria-describedby="inputGroup-sizing-sm"
-                  />
-                </div>
-                <div class="input-group input-group-sm mb-3">
-                  <input
-                    formControlName="priceTo"
-                    type="number"
-                    placeholder="Price to"
-                    class="form-control"
-                    aria-label="Sizing example input"
-                    aria-describedby="inputGroup-sizing-sm"
-                  />
-                </div>
-                <label class="form-label fw-bold fs-5">Rating</label>
-                <div class="input-group input-group-sm mb-3">
-                  <div class="form-check mb-2">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      id="ratingThree"
-                      formControlName="rating"
-                      (click)="onRatingFilterChange($event, 5)"
-                    /><label class="form-check-label" for="ratingThree"
-                      ><i class="bi bi-star-fill text-warning"></i
-                      ><i class="bi bi-star-fill text-warning"></i
-                      ><i class="bi bi-star-fill text-warning"></i
-                      ><i class="bi bi-star-fill text-warning"></i
-                      ><i class="bi bi-star-fill text-warning"></i
-                    ></label>
-                  </div>
-                </div>
-                <div class="input-group input-group-sm mb-3">
-                  <div class="form-check mb-2">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      id="ratingThree"
-                      formControlName="rating"
-                      (click)="onRatingFilterChange($event, 4)"
-                    /><label class="form-check-label" for="ratingThree"
-                      ><i class="bi bi-star-fill text-warning"></i
-                      ><i class="bi bi-star-fill text-warning"></i
-                      ><i class="bi bi-star-fill text-warning"></i
-                      ><i class="bi bi-star-fill text-warning"></i
-                      ><i class="bi bi-star text-warning"></i
-                    ></label>
-                  </div>
-                </div>
-                <div class="input-group input-group-sm mb-3">
-                  <div class="form-check mb-2">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      id="ratingThree"
-                      formControlName="rating"
-                      (click)="onRatingFilterChange($event, 3)"
-                    /><label class="form-check-label" for="ratingThree"
-                      ><i class="bi bi-star-fill text-warning"></i
-                      ><i class="bi bi-star-fill text-warning"></i
-                      ><i class="bi bi-star-fill text-warning"></i
-                      ><i class="bi bi-star text-warning"></i
-                      ><i class="bi bi-star text-warning"></i
-                    ></label>
-                  </div>
-                </div>
-                <div class="input-group input-group-sm mb-3">
-                  <div class="form-check mb-2">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      id="ratingThree"
-                      formControlName="rating"
-                      (click)="onRatingFilterChange($event, 2)"
-                    /><label class="form-check-label" for="ratingThree"
-                      ><i class="bi bi-star-fill text-warning"></i
-                      ><i class="bi bi-star-fill text-warning"></i
-                      ><i class="bi bi-star text-warning"></i
-                      ><i class="bi bi-star text-warning"></i
-                      ><i class="bi bi-star text-warning"></i
-                    ></label>
-                  </div>
-                </div>
-
-                <div class="input-group input-group-sm mb-3"></div>
-              </div>
-            </div>
-            <div class="card"></div>
-            <div *ngFor="let category of category$ | async" class="col">
-              <h2 class="bg-secondary bg-opacity-10 py-10 rounded p-10">
-                {{ category.name }}
-              </h2>
-              <div
-                class="d-flex flex-column flex-md-row justify-content-between pb-10"
-              >
-                <p>{{ productsSorted.length }} products found</p>
-                <div class="f-flex mt-2 mt-lg-0">
-                  <div class="me-2 flex-grow-1">
-                    <select
-                      class="form-select"
-                      name="order"
-                      [value]="order"
-                      [formControl]="order"
-                    >
-                      <option *ngFor="let order of orders" [ngValue]="order">
-                        {{ order.label }}
-                      </option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <div *ngFor="let item of stars">
-                <div class="card flex-row p-md-8 px-0">
-                  <div>
-                    <img [src]="item.imageUrl" [alt]="item" class="mx-auto" />
-                  </div>
-                  <div class="ms-6 align-self-center">
-                    <h5 class="mb-1"></h5>
-                    <div class="d-flex flex-column">
-                      <span>{{ category.name }}</span>
-                      <span class="fw-bold">{{ item.name }}</span>
-                      <span>
-                        <small class="text-warning">
-                          <i
-                            *ngFor="let val of item.ratingValue"
-                            class="bi"
-                            [ngClass]="{
-                              'bi-star-fill': val === 1,
-                              'bi-star': val === 0,
-                              'bi-star-half': val === 0.5
-                            }"
-                          ></i>
-                        </small>
-                        {{ item.ratingValueNum }}
-                        ({{ item.ratingCount }})</span
+                  <p>{{ productsSorted.length }} products found</p>
+                  <div class="f-flex mt-2 mt-lg-0">
+                    <div class="me-2 flex-grow-1">
+                      <select
+                        class="form-select"
+                        name="order"
+                        [value]="order"
+                        [formControl]="order"
                       >
-
-                      <span class="fw-bold">{{ item.price | currency }} </span>
+                        <option *ngFor="let order of orders" [ngValue]="order">
+                          {{ order.label }}
+                        </option>
+                      </select>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="pt-10 d-flex flex-row justify-content-between">
-                <nav aria-label="... " class="d-flex flex-column">
-                  <h4>Limit</h4>
-                  <ul class="pagination pagination-sm">
-                    <li
-                      *ngFor="let limit of limits$ | async"
-                      (click)="setLimit(limit)"
-                      [ngClass]="{
-                        'page-item active': (isActiveLimit$ | async) === limit
-                      }"
-                    >
-                      <a class="page-link"> {{ limit }}</a>
-                    </li>
-                  </ul>
-                </nav>
 
-                <nav aria-label="... " class="d-flex flex-column">
-                  <h4>Page</h4>
-                  <ul
-                    class="pagination pagination-sm list-group list-group-horizontal"
-                  >
-                    <li
-                      *ngFor="let page of pages$ | async"
-                      [ngClass]="{
-                        'page-item active': (isActivePage$ | async) === page
-                      }"
-                      (click)="setPage(page)"
+                <div *ngFor="let item of stars">
+                  <div class="card flex-row p-md-8 px-0">
+                    <div>
+                      <img [src]="item.imageUrl" [alt]="item" class="mx-auto" />
+                    </div>
+                    <div class="ms-6 align-self-center">
+                      <h5 class="mb-1"></h5>
+                      <div class="d-flex flex-column">
+                        <span>{{ category.name }}</span>
+                        <span class="fw-bold">{{ item.name }}</span>
+                        <span>
+                          <small class="text-warning">
+                            <i
+                              *ngFor="let val of item.ratingValue"
+                              class="bi"
+                              [ngClass]="{
+                                'bi-star-fill': val === 1,
+                                'bi-star': val === 0,
+                                'bi-star-half': val === 0.5
+                              }"
+                            ></i>
+                          </small>
+                          {{ item.ratingValueNum }}
+                          ({{ item.ratingCount }})</span
+                        >
+
+                        <span class="fw-bold"
+                          >{{ item.price | currency }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-10 d-flex flex-row justify-content-between">
+                  <nav aria-label="... " class="d-flex flex-column">
+                    <h4>Limit</h4>
+                    <ul class="pagination pagination-sm">
+                      <li
+                        *ngFor="let limit of limits$ | async"
+                        (click)="setLimit(limit)"
+                        [ngClass]="{
+                          'page-item active': (isActiveLimit$ | async) === limit
+                        }"
+                      >
+                        <a class="page-link"> {{ limit }}</a>
+                      </li>
+                    </ul>
+                  </nav>
+
+                  <nav aria-label="... " class="d-flex flex-column">
+                    <h4>Page</h4>
+                    <ul
+                      class="pagination pagination-sm list-group list-group-horizontal"
                     >
-                      <a class="page-link"> {{ page }}</a>
-                    </li>
-                  </ul>
-                </nav>
+                      <li
+                        *ngFor="let page of pages$ | async"
+                        [ngClass]="{
+                          'page-item active': (isActivePage$ | async) === page
+                        }"
+                        (click)="setPage(page)"
+                      >
+                        <a class="page-link"> {{ page }}</a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
               </div>
             </div>
-          </div>
+          </ng-container>
         </ng-container>
       </ng-container>
     </ng-container>

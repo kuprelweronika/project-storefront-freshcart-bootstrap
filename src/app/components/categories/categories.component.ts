@@ -44,6 +44,7 @@ export class CategoriesComponent {
     ratingTo: new FormControl(),
     stores: new FormControl(),
     rating: new FormControl(),
+    searchByStore: new FormControl(),
   });
   selectedStore: string[] = [];
   selectedRating: number[] = [];
@@ -190,7 +191,6 @@ export class CategoriesComponent {
               product.storeIds.includes(ai)
             );
           } else if (this.selectedRating.length != 0) {
-            console.log('this');
             return this.selectedRating.includes(
               this.roundNumber(product.ratingValue)
             );
@@ -201,8 +201,69 @@ export class CategoriesComponent {
       })
     );
 
+  readonly productsWithStores$: Observable<ProductModel[]> = combineLatest([
+    this.productsFilteredByPrice$,
+    this.stores$,
+  ]).pipe(
+    map(([products, stores]) => {
+      const storeMap = stores.reduce(
+        (a, c) => ({ ...a, [c.id]: c }),
+        {}
+      ) as Record<string, StoreModel>;
+
+      return products.map((product) => ({
+        name: product.name,
+        price: product.price,
+        categoryId: product.categoryId,
+        ratingValue: product.ratingValue,
+        ratingCount: product.ratingCount,
+        imageUrl: product.imageUrl,
+        featureValue: product.featureValue,
+        storeIds: (product.storeIds ?? []).map((id) =>
+          storeMap[id]?.name.toLowerCase()
+        ),
+        id: product.id,
+      }));
+    })
+  );
+
+  searchArrayForLetter(arr: string[], letter: string) {
+    for (let i = 0; i < arr.length; i++) {
+      const el = arr[i];
+      //@ts-ignore
+      if (!el.toLowerCase().includes(letter)) {
+        continue;
+      } else {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  readonly productsFilteredBySearchStore$: Observable<ProductModel[]> =
+    combineLatest([
+      this.productsWithStores$,
+      this.filterProducts
+        .get('searchByStore')
+        ?.valueChanges.pipe(startWith('')),
+    ]).pipe(
+      map(([products]) => {
+        let change = this.filterProducts.get('searchByStore')?.value;
+        //@ts-ignore
+        return products.filter((product) => {
+          if (change === null) {
+            return true;
+          } else {
+            return this.searchArrayForLetter(
+              product.storeIds,
+              change.toString().toLowerCase()
+            );
+          }
+        });
+      })
+    );
   readonly productsWithStars$: Observable<ProductQueryModel[]> =
-    this.productsFilteredByStoreOrRating$.pipe(
+    this.productsFilteredBySearchStore$.pipe(
       map((products) => {
         return products.map((product) => ({
           name: product.name,
@@ -231,6 +292,7 @@ export class CategoriesComponent {
       );
     })
   );
+
   //create 1 page list of products with page and limit
   readonly productsWithPage$: Observable<ProductModel[]> = combineLatest([
     this.paginationState,
@@ -328,6 +390,5 @@ export class CategoriesComponent {
         .sort();
     } else this.selectedStore.push(store.id);
     this.selectedStore.sort();
-    console.log(this.selectedStore);
   }
 }
