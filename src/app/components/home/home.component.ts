@@ -38,7 +38,6 @@ export class HomeComponent {
       string,
       StoreTagsModel
     >;
-    console.log(tagMap);
     return stores.map((store) => ({
       name: store.name,
       logoUrl: store.logoUrl,

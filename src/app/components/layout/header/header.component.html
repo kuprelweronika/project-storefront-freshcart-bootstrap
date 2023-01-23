@@ -45,12 +45,12 @@
       </div>
 
       <ul class="navbar-nav d-lg-flex flex-row d-none">
-        <li *ngFor="let item of categories$ | async" class="nav-item">
+        <li *ngFor="let category of categories" class="nav-item">
           <a
             class="nav-link"
-            [routerLink]="'categories/' + item.id"
+            [routerLink]="'categories/' + category.id"
             role="button"
-            >{{ item.name }}</a
+            >{{ category.name }}</a
           >
         </li>
       </ul>

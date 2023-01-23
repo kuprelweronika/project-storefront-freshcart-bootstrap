@@ -9,14 +9,13 @@ import {
   BehaviorSubject,
   Observable,
   combineLatest,
-  from,
   map,
   of,
   shareReplay,
   startWith,
   take,
   tap,
-  filter,
+  share,
 } from 'rxjs';
 import { CategoryModel } from '../../models/category.model';
 import { SortQueryModel } from '../../models/sort-query.model';
@@ -46,6 +45,8 @@ export class CategoriesComponent {
     rating: new FormControl(),
     searchByStore: new FormControl(),
   });
+
+  //array for selected checkbox
   selectedStore: string[] = [];
   selectedRating: number[] = [];
 
@@ -63,12 +64,11 @@ export class CategoriesComponent {
     { label: 'Avg. Rating', ids: 'ratingValue', direction: 'desc' },
   ]);
 
+  //subject for active state of pagination button
   private _isActivePageSubject: BehaviorSubject<number> =
     new BehaviorSubject<number>(1);
-
   public isActivePage$: Observable<number> =
     this._isActivePageSubject.asObservable();
-
   private _isActiveLimitSubject: BehaviorSubject<number> =
     new BehaviorSubject<number>(5);
   public isActiveLimit$: Observable<number> =
@@ -84,7 +84,6 @@ export class CategoriesComponent {
       );
     })
   );
-  //behaviorSubject for active button in pagination
 
   //actual pagination state
   readonly paginationState: Observable<{ limit: number; page: number }> =
@@ -98,18 +97,6 @@ export class CategoriesComponent {
       shareReplay(1)
     );
 
-  //list of all products for special category from activatedRoute
-  readonly products$: Observable<ProductModel[]> = combineLatest([
-    this._productsService.getAll(),
-    this._activatedRoute.params,
-  ]).pipe(
-    map(([products, params]: [ProductModel[], Params]) => {
-      return products.filter((product: ProductModel) =>
-        product.categoryId.includes(params['categoryId'].toString())
-      );
-    })
-  );
-
   sortData(products: ProductModel[], order: SortQueryModel) {
     if (order.direction === 'asc') {
       //@ts-ignore
@@ -119,6 +106,54 @@ export class CategoriesComponent {
       return products.sort((a, b) => (a[order.ids] > b[order.ids] ? -1 : 1));
     }
   }
+  searchArrayForLetter(arr: string[], letter: string) {
+    for (let i = 0; i < arr.length; i++) {
+      const el = arr[i];
+      //@ts-ignore
+      if (!el.toLowerCase().includes(letter)) {
+        continue;
+      } else {
+        return true;
+      }
+    }
+    return false;
+  }
+  roundNumber(num: number) {
+    let t = num - Math.floor(num);
+    let num1;
+    if (t >= 0.3 && t <= 0.7) {
+      return (num1 = Math.floor(num) + 0.5);
+    } else if (t > 0.7) {
+      return (num1 = Math.ceil(num));
+    } else {
+      return (num1 = Math.floor(num));
+    }
+  }
+
+  changeNumToArray(num: number) {
+    let num1 = this.roundNumber(num);
+    let testArray = [1, 1, 1, 1, 1];
+    testArray.fill(0, num1);
+    for (let i = 0.5; i < 5; i++) {
+      if (i === num1) {
+        testArray.fill(0.5, i - 0.5, i + 0.5);
+      } else {
+      }
+    }
+    return testArray;
+  }
+  //list of all products for special category from activatedRoute
+  readonly products$: Observable<ProductModel[]> = combineLatest([
+    this._productsService.getAll(),
+    this._activatedRoute.params,
+  ]).pipe(
+    map(([products, params]: [ProductModel[], Params]) => {
+      return products.filter((product: ProductModel) =>
+        product.categoryId.includes(params['categoryId'].toString())
+      );
+    }),
+    shareReplay()
+  );
 
   //list of products after  sorting
   readonly productsSorted$: Observable<ProductModel[]> = combineLatest([
@@ -148,7 +183,9 @@ export class CategoriesComponent {
     ]
   ).pipe(
     map(([products, priceFrom, priceTo]: [ProductModel[], number, number]) => {
-      if (priceFrom > 1) {
+      if (priceFrom === null && priceTo === null) {
+        return products;
+      } else if (priceFrom > 1) {
         return products.filter(
           (product) => product.price > priceFrom && product.price < priceTo
         );
@@ -202,7 +239,7 @@ export class CategoriesComponent {
     );
 
   readonly productsWithStores$: Observable<ProductModel[]> = combineLatest([
-    this.productsFilteredByPrice$,
+    this.productsFilteredByStoreOrRating$,
     this.stores$,
   ]).pipe(
     map(([products, stores]) => {
@@ -227,19 +264,6 @@ export class CategoriesComponent {
     })
   );
 
-  searchArrayForLetter(arr: string[], letter: string) {
-    for (let i = 0; i < arr.length; i++) {
-      const el = arr[i];
-      //@ts-ignore
-      if (!el.toLowerCase().includes(letter)) {
-        continue;
-      } else {
-        return true;
-      }
-    }
-    return false;
-  }
-
   readonly productsFilteredBySearchStore$: Observable<ProductModel[]> =
     combineLatest([
       this.productsWithStores$,
@@ -249,6 +273,7 @@ export class CategoriesComponent {
     ]).pipe(
       map(([products]) => {
         let change = this.filterProducts.get('searchByStore')?.value;
+
         //@ts-ignore
         return products.filter((product) => {
           if (change === null) {
@@ -281,8 +306,8 @@ export class CategoriesComponent {
     );
 
   //create array with pages
-  public pages$: Observable<number[]> = combineLatest([
-    this.productsFilteredByStoreOrRating$,
+  readonly pages$: Observable<number[]> = combineLatest([
+    this.productsWithStars$,
     this.paginationState,
   ]).pipe(
     map(([data, pagination]) => {
@@ -294,9 +319,9 @@ export class CategoriesComponent {
   );
 
   //create 1 page list of products with page and limit
-  readonly productsWithPage$: Observable<ProductModel[]> = combineLatest([
+  readonly productsWithPage$: Observable<ProductQueryModel[]> = combineLatest([
     this.paginationState,
-    this.productsFilteredByStoreOrRating$,
+    this.productsWithStars$,
   ]).pipe(
     map(([pagination, products]) =>
       products.slice(
@@ -314,30 +339,6 @@ export class CategoriesComponent {
     private _storesService: StoresService
   ) {}
 
-  roundNumber(num: number) {
-    let t = num - Math.floor(num);
-    let num1;
-    if (t >= 0.3 && t <= 0.7) {
-      return (num1 = Math.floor(num) + 0.5);
-    } else if (t > 0.7) {
-      return (num1 = Math.ceil(num));
-    } else {
-      return (num1 = Math.floor(num));
-    }
-  }
-
-  changeNumToArray(num: number) {
-    let num1 = this.roundNumber(num);
-    let testArray = [1, 1, 1, 1, 1];
-    testArray.fill(0, num1);
-    for (let i = 0.5; i < 5; i++) {
-      if (i === num1) {
-        testArray.fill(0.5, i - 0.5, i + 0.5);
-      } else {
-      }
-    }
-    return testArray;
-  }
   setPage(page: number) {
     this._isActivePageSubject.next(page);
     this.paginationState

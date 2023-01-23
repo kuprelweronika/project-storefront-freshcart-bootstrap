@@ -1,13 +1,13 @@
 <ng-container *ngIf="categories$ | async as categories">
   <ng-container *ngIf="productsWithPage$ | async as products">
     <ng-container *ngIf="productsSorted$ | async as productsSorted">
-      <ng-container *ngIf="productsWithStars$ | async as stars">
+      <ng-container *ngIf="productsWithPage$ | async as stars">
         <ng-container *ngIf="orders$ | async as orders">
           <ng-container *ngIf="stores$ | async as stores">
             <div
               class="d-flex flex-column pt-10 gap-3 container-fluid flex-lg-row"
             >
-              <div class="card pt-10 px-10">
+              <div class="pt-10 px-10">
                 <ul class="nav flex-column">
                   <h3 class="">Categories</h3>
                   <li
@@ -139,7 +139,7 @@
                   <div class="input-group input-group-sm mb-3"></div>
                 </div>
               </div>
-              <div class="card"></div>
+              <div class="card border-light"></div>
               <div *ngFor="let category of category$ | async" class="col">
                 <h2 class="bg-secondary bg-opacity-10 py-10 rounded p-10">
                   {{ category.name }}
