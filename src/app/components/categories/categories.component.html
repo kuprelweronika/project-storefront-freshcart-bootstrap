@@ -3,7 +3,7 @@
     <ng-container *ngIf="productsSorted$ | async as productsSorted">
       <ng-container *ngIf="productsWithPage$ | async as stars">
         <ng-container *ngIf="orders$ | async as orders">
-          <ng-container *ngIf="stores$ | async as stores">
+          <ng-container *ngIf="storesFilteredBySearch$ | async as stores">
             <div
               class="d-flex flex-column pt-10 gap-3 container-fluid flex-lg-row"
             >
@@ -164,35 +164,46 @@
                   </div>
                 </div>
 
-                <div *ngFor="let item of stars">
-                  <div class="card flex-row p-md-8 px-0">
-                    <div>
-                      <img [src]="item.imageUrl" [alt]="item" class="mx-auto" />
-                    </div>
-                    <div class="ms-6 align-self-center">
-                      <h5 class="mb-1"></h5>
-                      <div class="d-flex flex-column">
-                        <span>{{ category.name }}</span>
-                        <span class="fw-bold">{{ item.name }}</span>
-                        <span>
-                          <small class="text-warning">
-                            <i
-                              *ngFor="let val of item.ratingValue"
-                              class="bi"
-                              [ngClass]="{
-                                'bi-star-fill': val === 1,
-                                'bi-star': val === 0,
-                                'bi-star-half': val === 0.5
-                              }"
-                            ></i>
-                          </small>
-                          {{ item.ratingValueNum }}
-                          ({{ item.ratingCount }})</span
-                        >
+                <div
+                  type="button"
+                  class="btn container-fluid"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal"
+                >
+                  <div *ngFor="let item of stars">
+                    <div class="card flex-row p-md-8 px-0">
+                      <div>
+                        <img
+                          [src]="item.imageUrl"
+                          [alt]="item"
+                          class="mx-auto"
+                        />
+                      </div>
+                      <div class="ms-6 align-self-center">
+                        <h5 class="mb-1"></h5>
+                        <div class="d-flex flex-column">
+                          <span>{{ category.name }}</span>
+                          <span class="fw-bold">{{ item.name }}</span>
+                          <span>
+                            <small class="text-warning">
+                              <i
+                                *ngFor="let val of item.ratingValue"
+                                class="bi"
+                                [ngClass]="{
+                                  'bi-star-fill': val === 1,
+                                  'bi-star': val === 0,
+                                  'bi-star-half': val === 0.5
+                                }"
+                              ></i>
+                            </small>
+                            {{ item.ratingValueNum }}
+                            ({{ item.ratingCount }})</span
+                          >
 
-                        <span class="fw-bold"
-                          >{{ item.price | currency }}
-                        </span>
+                          <span class="fw-bold"
+                            >{{ item.price | currency }}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -229,6 +240,117 @@
                       </li>
                     </ul>
                   </nav>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="modal fade"
+              id="exampleModal"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+              *ngFor="let product of products"
+            >
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                      {{ product.name }}
+                    </h1>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="card mb-3" style="max-width: 540px">
+                      <div class="row g-0">
+                        <div class="col-md-4">
+                          <img
+                            src="{{ product.imageUrl }}"
+                            class="img-fluid rounded-start"
+                            alt="..."
+                          />
+                        </div>
+                        <div class="col-md-8">
+                          <div class="card-body">
+                            <h5 class="card-title fs-4">
+                              {{ product.name }}
+                            </h5>
+                            <p class="card-text fw-bold">
+                              <small class="text-warning">
+                                <i
+                                  *ngFor="let val of product.ratingValue"
+                                  class="bi"
+                                  [ngClass]="{
+                                    'bi-star-fill': val === 1,
+                                    'bi-star': val === 0,
+                                    'bi-star-half': val === 0.5
+                                  }"
+                                ></i>
+                                <span class="px-1"
+                                  >({{ product.ratingCount }})</span
+                                >
+                              </small>
+                            </p>
+
+                            <p>
+                              {{ product.price | currency }}
+                            </p>
+                            <p class="card-text"></p>
+                            <div
+                              class="btn-group"
+                              role="group"
+                              aria-label="Basic example"
+                            >
+                              <button
+                                class="btn btn-link px-2"
+                                onclick="this.parentNode.querySelector('input[type=number]').stepDown()"
+                              >
+                                <img
+                                  src="../../../assets/libs/bootstrap-icons/icons/dash-circle.svg"
+                                />
+                              </button>
+
+                              <input
+                                id="form1"
+                                min="0"
+                                name="quantity"
+                                value="1"
+                                type="number"
+                                class="form-control form-control-sm"
+                              />
+
+                              <button
+                                class="btn btn-link px-2"
+                                onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
+                              >
+                                <img
+                                  src="../../../assets/libs/bootstrap-icons/icons/plus-circle.svg"
+                                />
+                              </button>
+                            </div>
+                          </div>
+                          <p>Available in: {{ product.storeIds }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                      Add to Cart
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

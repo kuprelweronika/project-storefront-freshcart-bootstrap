@@ -15,7 +15,6 @@ import {
   startWith,
   take,
   tap,
-  share,
 } from 'rxjs';
 import { CategoryModel } from '../../models/category.model';
 import { SortQueryModel } from '../../models/sort-query.model';
@@ -263,32 +262,50 @@ export class CategoriesComponent {
       }));
     })
   );
+  //for filtered products by search stores
+  // readonly productsFilteredBySearchStore$: Observable<ProductModel[]> =
+  //   combineLatest([
+  //     this.productsWithStores$,
+  //     this.filterProducts
+  //       .get('searchByStore')
+  //       ?.valueChanges.pipe(startWith('')),
+  //   ]).pipe(
+  //     map(([products]) => {
+  //       let change = this.filterProducts.get('searchByStore')?.value;
 
-  readonly productsFilteredBySearchStore$: Observable<ProductModel[]> =
-    combineLatest([
-      this.productsWithStores$,
-      this.filterProducts
-        .get('searchByStore')
-        ?.valueChanges.pipe(startWith('')),
-    ]).pipe(
-      map(([products]) => {
-        let change = this.filterProducts.get('searchByStore')?.value;
+  //       //@ts-ignore
+  //       return products.filter((product) => {
+  //         if (change === null) {
+  //           return true;
+  //         } else {
+  //           return this.searchArrayForLetter(
+  //             product.storeIds,
+  //             change.toString().toLowerCase()
+  //           );
+  //         }
+  //       });
+  //     })
+  //   );
+  readonly storesFilteredBySearch$: Observable<StoreModel[]> = combineLatest([
+    this.stores$,
+    this.filterProducts.get('searchByStore')?.valueChanges.pipe(startWith('')),
+  ]).pipe(
+    map(([stores]) => {
+      let change = this.filterProducts.get('searchByStore')?.value;
 
-        //@ts-ignore
-        return products.filter((product) => {
-          if (change === null) {
-            return true;
-          } else {
-            return this.searchArrayForLetter(
-              product.storeIds,
-              change.toString().toLowerCase()
-            );
-          }
-        });
-      })
-    );
+      //@ts-ignore
+      return stores.filter((store) => {
+        if (change === null) {
+          return true;
+        } else {
+          return store.name.toLowerCase().includes(change.toLowerCase());
+        }
+      });
+    })
+  );
+
   readonly productsWithStars$: Observable<ProductQueryModel[]> =
-    this.productsFilteredBySearchStore$.pipe(
+    this.productsFilteredByStoreOrRating$.pipe(
       map((products) => {
         return products.map((product) => ({
           name: product.name,
