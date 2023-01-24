@@ -1,0 +1,16 @@
+<carousel
+  [itemsPerSlide]="5"
+  [singleSlideOffset]="true"
+  [noWrap]="true"
+  [interval]="0"
+  [showIndicators]="false"
+  [isAnimated]="true"
+  ><slide *ngFor="let category of categories$ | async" class="border m-1">
+    <div
+      class="pt-10 d-flex flex-column justify-content-center align-items-center text-center"
+    >
+      <img src="{{ category.imageUrl }}" class="img-fluid w-40 h-100" />
+      <p class="pt-3 h-100">{{ category.name }}</p>
+    </div></slide
+  >
+</carousel>

@@ -5,6 +5,7 @@ import { HomeComponent } from './home.component';
 import { HeaderComponentModule } from '../layout/header/header.component-module';
 import { FooterComponentModule } from '../layout/footer/footer.component-module';
 import { CarouselHomeComponentModule } from '../carousel-home/carousel-home.component-module';
+import { CarouselCategoriesComponentModule } from '../carousel-categories/carousel-categories.component-module';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -16,6 +17,7 @@ import { CarouselHomeComponentModule } from '../carousel-home/carousel-home.comp
     HeaderComponentModule,
     FooterComponentModule,
     CarouselHomeComponentModule,
+    CarouselCategoriesComponentModule,
   ],
 })
 export class HomeComponentModule {}

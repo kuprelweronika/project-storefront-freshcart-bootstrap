@@ -4,6 +4,9 @@
       <ng-container *ngIf="productsSnacks$ | async as productsSnacks">
         <div class="container-fluid px-sm-16 px-md-12 pt-10">
           <app-carousel-home></app-carousel-home>
+          <div class="container pt-10"><h2>Featured Categories</h2></div>
+
+          <app-carousel-categories></app-carousel-categories>
           <div class="container pt-10"><h2>Shop by Category</h2></div>
           <div
             class="row row-cols-1 row-cols-md-3 row-cols-lg-5 justify-content-center"

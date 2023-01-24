@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { FooterComponentModule } from './components/layout/footer/footer.component-module';
 import { HeaderComponentModule } from './components/layout/header/header.component-module';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,6 +25,7 @@ import { HeaderComponentModule } from './components/layout/header/header.compone
     RouterModule,
     FooterComponentModule,
     HeaderComponentModule,
+    CarouselModule,
   ],
 })
 export class AppModule {}

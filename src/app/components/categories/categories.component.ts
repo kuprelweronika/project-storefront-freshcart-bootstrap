@@ -233,9 +233,7 @@ export class CategoriesComponent {
   readonly productsFiltered$: Observable<ProductModel[]> = combineLatest([
     this.stores$,
     this.productsSorted$,
-    //@ts-ignore
     this.filterByStore.valueChanges.pipe(startWith([])),
-    //@ts-ignore
     this.ratingByStar.valueChanges.pipe(startWith([])),
     //@ts-ignore
     this.filterProducts.get('priceFrom').valueChanges.pipe(startWith(1)),
