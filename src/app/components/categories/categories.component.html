@@ -148,6 +148,18 @@
                   class="d-flex flex-column flex-md-row justify-content-between pb-10"
                 >
                   <p>{{ productsSorted.length }} products found</p>
+                  <div class="d-none d-lg-block">
+                    <button class="btn btn-light mx-2" (click)="isList(false)">
+                      <img
+                        src="../../../assets/libs/bootstrap-icons/icons/grid.svg"
+                      />
+                    </button>
+                    <button class="btn btn-light" (click)="isList(true)">
+                      <img
+                        src="../../../assets/libs/bootstrap-icons/icons/list.svg"
+                      />
+                    </button>
+                  </div>
                   <div class="f-flex mt-2 mt-lg-0">
                     <div class="me-2 flex-grow-1">
                       <select
@@ -166,12 +178,22 @@
 
                 <div
                   type="button"
-                  class="btn container-fluid"
+                  [ngClass]="
+                    status
+                      ? 'btn container-fluid d-flex flex-column'
+                      : 'btn container-fluid d-flex flex-row flex-wrap gap-1'
+                  "
                   data-bs-toggle="modal"
                   data-bs-target="#exampleModal"
                 >
                   <div *ngFor="let item of stars" class="py-2">
-                    <div class="card flex-row p-md-8 px-0">
+                    <div
+                      [ngClass]="
+                        status
+                          ? 'card flex-column flex-md-row  p-md-8 px-0'
+                          : '  p-md-8 px-0 border'
+                      "
+                    >
                       <div>
                         <img
                           [src]="item.imageUrl"

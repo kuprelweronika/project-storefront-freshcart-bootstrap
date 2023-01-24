@@ -43,7 +43,6 @@ export class CategoriesComponent {
     stores: new FormControl(),
     rating: new FormControl(),
     searchByStore: new FormControl(),
-    order: new FormControl(),
   });
 
   //array for selected checkbox
@@ -63,6 +62,8 @@ export class CategoriesComponent {
     { label: 'Price: High to Low', ids: 'price', direction: 'desc' },
     { label: 'Avg. Rating', ids: 'ratingValue', direction: 'desc' },
   ]);
+
+  status: boolean = true;
 
   //subject for active state of pagination button
   private _isActivePageSubject: BehaviorSubject<number> =
@@ -407,5 +408,9 @@ export class CategoriesComponent {
         .sort();
     } else this.selectedStore.push(store.id);
     this.selectedStore.sort();
+  }
+
+  isList(click: boolean) {
+    this.status = click;
   }
 }
