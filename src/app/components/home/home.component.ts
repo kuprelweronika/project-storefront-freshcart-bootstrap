@@ -40,7 +40,7 @@ export class HomeComponent {
     return stores.map((store) => ({
       name: store.name,
       logoUrl: store.logoUrl,
-      distanceInMeters: store.distanceInMeters,
+      distanceInMeters: parseFloat((store.distanceInMeters / 1000).toFixed(1)),
       tagIds: (store.tagIds ?? []).map((id) => tagMap[id]?.name),
       id: store.id,
     }));
