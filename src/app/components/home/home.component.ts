@@ -12,7 +12,6 @@ import { CategoriesService } from '../../services/categories.service';
 import { ProductsService } from '../../services/products.service';
 import { TagsService } from 'src/app/services/tags.service';
 import { StoreTagsModel } from 'src/app/models/store-tags.model';
-import { userInfo } from 'os';
 
 @Component({
   selector: 'app-home',

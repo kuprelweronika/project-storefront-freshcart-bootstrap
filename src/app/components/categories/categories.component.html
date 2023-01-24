@@ -170,7 +170,7 @@
                   data-bs-toggle="modal"
                   data-bs-target="#exampleModal"
                 >
-                  <div *ngFor="let item of stars">
+                  <div *ngFor="let item of stars" class="py-2">
                     <div class="card flex-row p-md-8 px-0">
                       <div>
                         <img
@@ -250,7 +250,7 @@
               tabindex="-1"
               aria-labelledby="exampleModalLabel"
               aria-hidden="true"
-              *ngFor="let product of products"
+              *ngFor="let product of stars"
             >
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -334,7 +334,12 @@
                               </button>
                             </div>
                           </div>
-                          <p>Available in: {{ product.storeIds }}</p>
+                          <div>
+                            Available in:
+                            <div *ngFor="let storesId of product.storeIds">
+                              {{ storesId }}
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>

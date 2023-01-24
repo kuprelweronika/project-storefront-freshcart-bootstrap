@@ -43,6 +43,7 @@ export class CategoriesComponent {
     stores: new FormControl(),
     rating: new FormControl(),
     searchByStore: new FormControl(),
+    order: new FormControl(),
   });
 
   //array for selected checkbox
@@ -255,9 +256,7 @@ export class CategoriesComponent {
         ratingCount: product.ratingCount,
         imageUrl: product.imageUrl,
         featureValue: product.featureValue,
-        storeIds: (product.storeIds ?? []).map((id) =>
-          storeMap[id]?.name.toLowerCase()
-        ),
+        storeIds: (product.storeIds ?? []).map((id) => storeMap[id]?.name),
         id: product.id,
       }));
     })
@@ -305,7 +304,7 @@ export class CategoriesComponent {
   );
 
   readonly productsWithStars$: Observable<ProductQueryModel[]> =
-    this.productsFilteredByStoreOrRating$.pipe(
+    this.productsWithStores$.pipe(
       map((products) => {
         return products.map((product) => ({
           name: product.name,
