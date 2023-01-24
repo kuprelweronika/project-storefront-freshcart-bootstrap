@@ -17,6 +17,7 @@
             >
               <div
                 class="d-flex flex-column justify-content-center align-items-center"
+                [routerLink]="'/categories/' + category.id"
               >
                 <img src="{{ category.imageUrl }}" class="img-fluid w-40" />
                 <p class="pt-3">{{ category.name }}</p>
@@ -79,23 +80,28 @@
               <div
                 class="col-md-4 d-flex flex-column p-2"
                 *ngFor="let store of stores"
+                [routerLink]="'/stores/' + store.id"
               >
                 <div class="border d-flex p-2 h-100">
                   <img
                     src="{{ store.logoUrl }}"
                     class="img-fluid rounded-circle"
                   />
-                  <div class="d-flex flex-column align-items-start ps-lg-4">
+                  <div
+                    class="d-flex flex-column align-items-center justify-content-center ps-lg-4"
+                  >
                     <h6 class="">{{ store.name }}</h6>
-                    <div class="d-flex flex-row">
-                      <p
-                        class="text-muted small secondary fw-lighter"
+                    <div
+                      class="d-flex flex-row flex-wrap px-1 gap-1 small py-2"
+                    >
+                      <span
+                        class="badge text-bg-secondary"
                         *ngFor="let storeTag of store.tagIds"
                       >
-                        {{ storeTag }},
-                      </p>
+                        {{ storeTag }}
+                      </span>
                     </div>
-                    <p class="badge bg-secondary">
+                    <p class="badge bg-light text-body gap-1 border">
                       {{ store.distanceInMeters }} km
                     </p>
                   </div>
