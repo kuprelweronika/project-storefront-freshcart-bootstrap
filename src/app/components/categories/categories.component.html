@@ -32,18 +32,18 @@
                     placeholder="Search by store..."
                     type="text"
                   />
-
-                  <div *ngFor="let store of stores" class="form-check mb-2">
-                    <input
-                      [id]="store"
-                      (click)="onStoreFilterChange($event, store)"
-                      class="form-check-input"
-                      type="checkbox"
-                      value="store"
-                      formControlName="stores"
-                    /><label [for]="store" class="form-check-label">{{
-                      store.name
-                    }}</label>
+                  <div [formGroup]="filterByStore">
+                    <div *ngFor="let store of stores" class="form-check mb-2">
+                      <input
+                        [id]="store.id"
+                        class="form-check-input"
+                        type="checkbox"
+                        [value]="store.id"
+                        [formControlName]="store.id"
+                      /><label [for]="store" class="form-check-label">{{
+                        store.name
+                      }}</label>
+                    </div>
                   </div>
                   <label class="form-label fw-bold fs-5">Price</label>
                   <div class="input-group input-group-sm mb-3">
@@ -66,73 +66,74 @@
                       aria-describedby="inputGroup-sizing-sm"
                     />
                   </div>
-                  <label class="form-label fw-bold fs-5">Rating</label>
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="form-check mb-2">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        id="ratingThree"
-                        formControlName="rating"
-                        (click)="onRatingFilterChange($event, 5)"
-                      /><label class="form-check-label" for="ratingThree"
-                        ><i class="bi bi-star-fill text-warning"></i
-                        ><i class="bi bi-star-fill text-warning"></i
-                        ><i class="bi bi-star-fill text-warning"></i
-                        ><i class="bi bi-star-fill text-warning"></i
-                        ><i class="bi bi-star-fill text-warning"></i
-                      ></label>
+                  <div [formGroup]="ratingByStar">
+                    <label class="form-label fw-bold fs-5">Rating</label>
+                    <div class="input-group input-group-sm mb-3">
+                      <div class="form-check mb-2">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="ratingThree"
+                          formControlName="rating5"
+                          value="5"
+                        /><label class="form-check-label" for="ratingThree"
+                          ><i class="bi bi-star-fill text-warning"></i
+                          ><i class="bi bi-star-fill text-warning"></i
+                          ><i class="bi bi-star-fill text-warning"></i
+                          ><i class="bi bi-star-fill text-warning"></i
+                          ><i class="bi bi-star-fill text-warning"></i
+                        ></label>
+                      </div>
                     </div>
-                  </div>
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="form-check mb-2">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        id="ratingThree"
-                        formControlName="rating"
-                        (click)="onRatingFilterChange($event, 4)"
-                      /><label class="form-check-label" for="ratingThree"
-                        ><i class="bi bi-star-fill text-warning"></i
-                        ><i class="bi bi-star-fill text-warning"></i
-                        ><i class="bi bi-star-fill text-warning"></i
-                        ><i class="bi bi-star-fill text-warning"></i
-                        ><i class="bi bi-star text-warning"></i
-                      ></label>
+                    <div class="input-group input-group-sm mb-3">
+                      <div class="form-check mb-2">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="ratingThree"
+                          formControlName="rating4"
+                          [value]="4"
+                        /><label class="form-check-label" for="ratingThree"
+                          ><i class="bi bi-star-fill text-warning"></i
+                          ><i class="bi bi-star-fill text-warning"></i
+                          ><i class="bi bi-star-fill text-warning"></i
+                          ><i class="bi bi-star-fill text-warning"></i
+                          ><i class="bi bi-star text-warning"></i
+                        ></label>
+                      </div>
                     </div>
-                  </div>
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="form-check mb-2">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        id="ratingThree"
-                        formControlName="rating"
-                        (click)="onRatingFilterChange($event, 3)"
-                      /><label class="form-check-label" for="ratingThree"
-                        ><i class="bi bi-star-fill text-warning"></i
-                        ><i class="bi bi-star-fill text-warning"></i
-                        ><i class="bi bi-star-fill text-warning"></i
-                        ><i class="bi bi-star text-warning"></i
-                        ><i class="bi bi-star text-warning"></i
-                      ></label>
+                    <div class="input-group input-group-sm mb-3">
+                      <div class="form-check mb-2">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="ratingThree"
+                          formControlName="rating3"
+                          [value]="3"
+                        /><label class="form-check-label" for="ratingThree"
+                          ><i class="bi bi-star-fill text-warning"></i
+                          ><i class="bi bi-star-fill text-warning"></i
+                          ><i class="bi bi-star-fill text-warning"></i
+                          ><i class="bi bi-star text-warning"></i
+                          ><i class="bi bi-star text-warning"></i
+                        ></label>
+                      </div>
                     </div>
-                  </div>
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="form-check mb-2">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        id="ratingThree"
-                        formControlName="rating"
-                        (click)="onRatingFilterChange($event, 2)"
-                      /><label class="form-check-label" for="ratingThree"
-                        ><i class="bi bi-star-fill text-warning"></i
-                        ><i class="bi bi-star-fill text-warning"></i
-                        ><i class="bi bi-star text-warning"></i
-                        ><i class="bi bi-star text-warning"></i
-                        ><i class="bi bi-star text-warning"></i
-                      ></label>
+                    <div class="input-group input-group-sm mb-3">
+                      <div class="form-check mb-2">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="ratingThree"
+                          formControlName="rating2"
+                        /><label class="form-check-label" for="ratingThree"
+                          ><i class="bi bi-star-fill text-warning"></i
+                          ><i class="bi bi-star-fill text-warning"></i
+                          ><i class="bi bi-star text-warning"></i
+                          ><i class="bi bi-star text-warning"></i
+                          ><i class="bi bi-star text-warning"></i
+                        ></label>
+                      </div>
                     </div>
                   </div>
 
