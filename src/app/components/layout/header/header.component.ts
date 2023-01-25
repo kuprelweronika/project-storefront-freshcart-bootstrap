@@ -15,17 +15,17 @@ import { CategoriesService } from '../../../services/categories.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
+  isCollapsed = false;
   readonly categories$: Observable<CategoryModel[]> =
     this._categoriesService.getAllCategories();
-
-  private _menuTogglerSubject: BehaviorSubject<boolean> =
-    new BehaviorSubject<boolean>(true);
-  public menuToggler$: Observable<boolean> =
-    this._menuTogglerSubject.asObservable();
-
-  toggleMenu() {
-    this._menuTogglerSubject.next(!this._menuTogglerSubject.value);
-  }
+  private _menuToggleSubject: BehaviorSubject<boolean> =
+    new BehaviorSubject<boolean>(false);
+  public menuToggle$: Observable<boolean> =
+    this._menuToggleSubject.asObservable();
 
   constructor(private _categoriesService: CategoriesService) {}
+
+  toggleMenu() {
+    this._menuToggleSubject.next(!this.menuToggle$);
+  }
 }

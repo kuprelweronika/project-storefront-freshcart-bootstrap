@@ -10,7 +10,6 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { StoreModel } from '../../models/store.model';
 import { ProductModel } from '../../models/product.model';
 import { StoresService } from '../../services/stores.service';
-import { CategoriesService } from '../../services/categories.service';
 import { ProductsService } from '../../services/products.service';
 
 @Component({

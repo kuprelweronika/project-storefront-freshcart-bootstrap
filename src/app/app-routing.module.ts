@@ -8,6 +8,7 @@ import { CategoriesComponentModule } from './components/categories/categories.co
 import { StoresComponentModule } from './components/stores/stores.component-module';
 import { FooterComponentModule } from './components/layout/footer/footer.component-module';
 import { HeaderComponentModule } from './components/layout/header/header.component-module';
+import { environment } from 'src/environments/environment';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },

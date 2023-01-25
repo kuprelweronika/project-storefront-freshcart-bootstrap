@@ -12,7 +12,6 @@ import { CategoriesService } from '../../services/categories.service';
 import { ProductsService } from '../../services/products.service';
 import { TagsService } from 'src/app/services/tags.service';
 import { StoreTagsModel } from 'src/app/models/store-tags.model';
-import { userInfo } from 'os';
 
 @Component({
   selector: 'app-home',
@@ -38,11 +37,10 @@ export class HomeComponent {
       string,
       StoreTagsModel
     >;
-    console.log(tagMap);
     return stores.map((store) => ({
       name: store.name,
       logoUrl: store.logoUrl,
-      distanceInMeters: store.distanceInMeters,
+      distanceInMeters: parseFloat((store.distanceInMeters / 1000).toFixed(1)),
       tagIds: (store.tagIds ?? []).map((id) => tagMap[id]?.name),
       id: store.id,
     }));
